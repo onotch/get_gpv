@@ -31,6 +31,10 @@ month=`date +"%m"`
 day=`date +"%d"`
 hour=`date +"%H"`
 
+if [ ! -d ${LOG_DIR} ]; then
+  mkdir -p ${LOG_DIR}
+fi
+
 for type in ${TYPE[@]}
 do
   for area in ${AREA[@]}
@@ -49,14 +53,10 @@ do
       curl -s -o "./${save_dir}/${filename}" ${GPV_URL}/msm/${filename}
 
       if [ ! -e ${save_dir}/${filename} ]; then
-        if [ ! -d ${LOG_DIR} ]; then
-          mkdir -p ${LOG_DIR}
-        fi
-
-        log="failed to download ${filename}."
-        echo ${log}
-        echo ${log} > ${LOG_DIR}/${LOG_FILE}
+        echo "`date +"%F %T"` : failed to download ${filename}" >> ${LOG_DIR}/${LOG_FILE}
       fi
+    else
+        echo "`date +"%F %T"` : failed to download ${url_html}" >> ${LOG_DIR}/${LOG_FILE}
     fi
   done
 done
