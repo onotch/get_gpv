@@ -1,9 +1,9 @@
 #!/bin/sh
 
 ### TYPE ###
-# cp:
-# th:
-# wa:
+# cp: Cloudiness and precipitation
+# th: Temperature and Humidity
+# wa: Wind and Atmosphere
 TYPE=("cp" "th" "wa")
 
 ### AREA ###
