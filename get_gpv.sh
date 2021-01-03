@@ -48,9 +48,7 @@ do
 
       curl -s -o "./${save_dir}/${filename}" ${GPV_URL}/msm/${filename}
 
-      if [ -e ${save_dir}/${filename} ]; then
-        echo "${filename} has been downloaded."
-      else
+      if [ ! -e ${save_dir}/${filename} ]; then
         if [ ! -d ${LOG_DIR} ]; then
           mkdir -p ${LOG_DIR}
         fi
