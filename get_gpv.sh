@@ -1,7 +1,7 @@
 #!/bin/sh
 
-# for MacOS
-alias date='gdate'
+# for MacOS (comment out the following line for Linux)
+alias date='/usr/local/bin/gdate'
 
 ### TYPE ###
 # cp: Cloudiness and Precipitation
@@ -29,14 +29,14 @@ SAVE_DIR_ROOT="gpv_images"
 LOG_DIR="log"
 LOG_FILE="error_log.txt"
 
+if [ ! -d ${LOG_DIR} ]; then
+  mkdir -p ${LOG_DIR}
+fi
+
 year=`date -d '3 hours ago' +'%Y'`
 month=`date -d '3 hours ago' +'%m'`
 day=`date -d '3 hours ago' +'%d'`
 hour=`date -d '3 hours ago' +'%H'`
-
-if [ ! -d ${LOG_DIR} ]; then
-  mkdir -p ${LOG_DIR}
-fi
 
 for type in ${TYPE[@]}
 do
