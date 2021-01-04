@@ -7,6 +7,7 @@ GPVの予想図をローカルにアーカイブするスクリプトです。
 1. （MacOS上で実行する場合）gdateコマンドを使うためbrewとcoreutilsをインストールする
 
 $ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+
 $ brew install coreutils
 
 2. スクリプトに実行権限を付与する
