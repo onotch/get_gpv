@@ -52,10 +52,12 @@ for type in ${TYPE[@]}; do
 
       for ((i=1; i<=3; i++)); do
         filename=`grep "fnl\[${i}\]" ${TMP_HTML_FILE} | awk -F'["]' '{print $2}'`
+        save_hour=`date -d "$((4-i)) hours ago" +"%H"`
+        save_file_path="./${save_dir}/msm_${type}_${area}_${year}${month}${day}${save_hour}.png"
 
-        curl -s -o "./${save_dir}/${filename}" ${GPV_URL}/msm/${filename}
+        curl -s -o "./${save_file_path}" ${GPV_URL}/msm/${filename}
 
-        if [ ! -e ${save_dir}/${filename} ]; then
+        if [ ! -e ${save_file_path} ]; then
           echo "`date +'%F %T'` : failed to download ${filename}" >> ${log_file_path}
         fi
       done
