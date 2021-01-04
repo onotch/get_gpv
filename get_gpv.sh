@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # for MacOS (comment out the following line for Linux)
-alias date='/usr/local/bin/gdate'
+alias date="/usr/local/bin/gdate"
 
 ### TYPE ###
 # cp: Cloudiness and Precipitation
@@ -27,7 +27,7 @@ AREA=("dh" "dn" "kh" "mh" "kt" "cb" "kk" "cs" "ks" "ks" "on" "to" "is")
 GPV_URL="http://weather-gpv.info"
 SAVE_DIR_ROOT="gpv_images"
 LOG_DIR="log"
-LOG_FILE="error_log.txt"
+TMP_HTML_FILE="tmp.html"
 
 if [ ! -d ${LOG_DIR} ]; then
   mkdir -p ${LOG_DIR}
@@ -37,29 +37,32 @@ year=`date -d '3 hours ago' +'%Y'`
 month=`date -d '3 hours ago' +'%m'`
 day=`date -d '3 hours ago' +'%d'`
 hour=`date -d '3 hours ago' +'%H'`
+log_file_path="${LOG_DIR}/error_log_`date +'%Y%m%d'`.txt"
 
-for type in ${TYPE[@]}
-do
-  for area in ${AREA[@]}
-  do
+for type in ${TYPE[@]}; do
+  for area in ${AREA[@]}; do
     url_html=${GPV_URL}/msm_${type}_${area}_${year}${month}${day}${hour}.html
-    response=`curl -s -o /dev/null -w "%{http_code}" ${url_html}`
+    response=`curl -s -o ${TMP_HTML_FILE} -w "%{http_code}" ${url_html}`
 
     if [ ${response} = "200" ]; then
-      filename=`curl -s ${url_html} | grep "fnl\[1\]" | awk -F'["]' '{print $2}'`
       save_dir=${SAVE_DIR_ROOT}/${type}/${area}/${year}/${month}/${day}
-
       if [ ! -d ${save_dir} ]; then
         mkdir -p ${save_dir}
       fi
 
-      curl -s -o "./${save_dir}/${filename}" ${GPV_URL}/msm/${filename}
+      for ((i=1; i<=3; i++)); do
+        filename=`grep "fnl\[${i}\]" ${TMP_HTML_FILE} | awk -F'["]' '{print $2}'`
 
-      if [ ! -e ${save_dir}/${filename} ]; then
-        echo "`date +'%F %T'` : failed to download ${filename}" >> ${LOG_DIR}/${LOG_FILE}
-      fi
+        curl -s -o "./${save_dir}/${filename}" ${GPV_URL}/msm/${filename}
+
+        if [ ! -e ${save_dir}/${filename} ]; then
+          echo "`date +'%F %T'` : failed to download ${filename}" >> ${log_file_path}
+        fi
+      done
     else
-        echo "`date +'%F %T'` : failed to download ${url_html}" >> ${LOG_DIR}/${LOG_FILE}
+        echo "`date +'%F %T'` : failed to download ${url_html}" >> ${log_file_path}
     fi
+
+    rm ${TMP_HTML_FILE} > /dev/null 2>&1
   done
 done

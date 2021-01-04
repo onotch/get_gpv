@@ -1,12 +1,12 @@
 GPVの予想図をローカルにアーカイブするスクリプトです。
 
-全エリアの「雨量・雲量」「気温・湿度」「気圧・風速」の予想図でGPVのサイトからアクセスできる一番過去のもの（3時間前）をダウンロードします。
+全エリアの「雨量・雲量」「気温・湿度」「気圧・風速」の予想図でGPVのサイトからアクセスできる過去データ（3時間分）をダウンロードします。
 
 ※特定の情報だけアーカイブしたい場合はスクリプトのTYPEとAREAの配列で必要なものだけ残してください
 
 ◆インストール方法
 
-1. （MacOS上で実行する場合）gdateコマンドを使うためbrewとcoreutilsをインストールする
+1. gdateコマンドを使うためbrewとcoreutilsをインストールする（MacOSのみ）
 
 $ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 
