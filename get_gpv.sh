@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# for MacOS
+alias date='gdate'
+
 ### TYPE ###
 # cp: Cloudiness and Precipitation
 # th: Temperature and Humidity
@@ -26,10 +29,10 @@ SAVE_DIR_ROOT="gpv_images"
 LOG_DIR="log"
 LOG_FILE="error_log.txt"
 
-year=`date +"%Y"`
-month=`date +"%m"`
-day=`date +"%d"`
-hour=`date +"%H"`
+year=`date -d '3 hours ago' +'%Y'`
+month=`date -d '3 hours ago' +'%m'`
+day=`date -d '3 hours ago' +'%d'`
+hour=`date -d '3 hours ago' +'%H'`
 
 if [ ! -d ${LOG_DIR} ]; then
   mkdir -p ${LOG_DIR}
@@ -53,10 +56,10 @@ do
       curl -s -o "./${save_dir}/${filename}" ${GPV_URL}/msm/${filename}
 
       if [ ! -e ${save_dir}/${filename} ]; then
-        echo "`date +"%F %T"` : failed to download ${filename}" >> ${LOG_DIR}/${LOG_FILE}
+        echo "`date +'%F %T'` : failed to download ${filename}" >> ${LOG_DIR}/${LOG_FILE}
       fi
     else
-        echo "`date +"%F %T"` : failed to download ${url_html}" >> ${LOG_DIR}/${LOG_FILE}
+        echo "`date +'%F %T'` : failed to download ${url_html}" >> ${LOG_DIR}/${LOG_FILE}
     fi
   done
 done
