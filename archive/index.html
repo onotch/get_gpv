@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Cache-Control" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+
+	<title>GPV Archive</title>
+
+	<link type="text/css" rel="stylesheet" media="all" href="css/index.css" />
+	<script type="text/javascript" src="js/jquery-3.5.1.min.js"></script>
+	<script type="text/javascript" src="js/index.js"></script>
+</head>
+
+<body>
+	<div id="Container">
+		<div id="Area" class="Option">
+			<h2>地域</h2>
+			<div>
+				<label><input type="radio" name="area" value="dh" />道北</label>
+				<label><input type="radio" name="area" value="dn" />道南</label>
+				<label><input type="radio" name="area" value="kh" />北東北</label>
+				<label><input type="radio" name="area" value="mh" />南東北</label>
+				<label><input type="radio" name="area" value="kt" checked />関東</label>
+				<label><input type="radio" name="area" value="cb" />中部</label>
+				<label><input type="radio" name="area" value="kk" />近畿</label>
+				<label><input type="radio" name="area" value="cs" />中四国</label>
+				<label><input type="radio" name="area" value="ks" />九州</label>
+				<label><input type="radio" name="area" value="on" />沖縄</label>
+				<label><input type="radio" name="area" value="to" />奄美</label>
+				<label><input type="radio" name="area" value="is" />伊豆諸島</label>
+			</div>
+		</div>
+
+		<div id="Type" class="Option">
+			<h2>種別</h2>
+			<div>
+				<label><input type="radio" name="type" value="cp" checked />雨量・雲量</label>
+				<label><input type="radio" name="type" value="th" />気圧・風速</label>
+				<label><input type="radio" name="type" value="wa" />気温・湿度</label>
+			</div>
+		</div>
+
+		<div id="Date" class="Option">
+			<div id="Year">
+				<select name="year">
+				</select>
+				<p>年</p>
+			</div>
+			<div id="Month">
+				<select name="month">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+					<option value="6">6</option>
+					<option value="7">7</option>
+					<option value="8">8</option>
+					<option value="9">9</option>
+					<option value="10">10</option>
+					<option value="11">11</option>
+					<option value="12">12</option>
+				</select>
+				<p>月</p>
+			</div>
+			<div id="Day">
+				<select name="day">
+				</select>
+				<p>日</p>
+			</div>
+			<div id="Hour">
+				<select name="hour">
+					<option value="0">0</option>
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+					<option value="6">6</option>
+					<option value="7">7</option>
+					<option value="8">8</option>
+					<option value="9">9</option>
+					<option value="10">10</option>
+					<option value="11">11</option>
+					<option value="12">12</option>
+					<option value="13">13</option>
+					<option value="14">14</option>
+					<option value="15">15</option>
+					<option value="16">16</option>
+					<option value="17">17</option>
+					<option value="18">18</option>
+					<option value="19">19</option>
+					<option value="20">20</option>
+					<option value="21">21</option>
+					<option value="22">22</option>
+					<option value="23">23</option>
+				</select>
+				<p>時</p>
+			</div>
+			<div id="Button">
+				<p><button id="PrevButton">◀︎</button><button id="NextButton">▶︎</button></p>
+			</div>
+		</div>
+
+		<div id="Image">
+			<p id="NoImage">NO IMAGE</p>
+			<p id="GpvImage"></p>
+		</div>
+	</div>
+</body>
+</html>

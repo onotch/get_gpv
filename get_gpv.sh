@@ -25,7 +25,7 @@ TYPE=("cp" "th" "wa")
 AREA=("dh" "dn" "kh" "mh" "kt" "cb" "kk" "cs" "ks" "ks" "on" "to" "is")
 
 GPV_URL="http://weather-gpv.info"
-SAVE_DIR_ROOT="gpv_images"
+SAVE_DIR_ROOT="archive/images"
 LOG_DIR="log"
 TMP_HTML_FILE="tmp.html"
 
@@ -33,7 +33,7 @@ if [ ! -d ${LOG_DIR} ]; then
   mkdir -p ${LOG_DIR}
 fi
 
-year=`date -d '3 hours ago' +'%Y'`
+year=`date -d "3 hours ago" +"%Y"`
 month=`date -d '3 hours ago' +'%m'`
 day=`date -d '3 hours ago' +'%d'`
 hour=`date -d '3 hours ago' +'%H'`
@@ -55,7 +55,7 @@ for type in ${TYPE[@]}; do
         save_hour=`date -d "$((4-i)) hours ago" +"%H"`
         save_file_path="./${save_dir}/msm_${type}_${area}_${year}${month}${day}${save_hour}.png"
 
-        curl -s -o "./${save_file_path}" ${GPV_URL}/msm/${filename}
+        curl -s -o ${save_file_path} ${GPV_URL}/msm/${filename}
 
         if [ ! -e ${save_file_path} ]; then
           echo "`date +'%F %T'` : failed to download ${filename}" >> ${log_file_path}

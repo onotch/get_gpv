@@ -1,0 +1,91 @@
+@charset "UTF-8";
+
+body, div, h2, p, select, button, img{
+	margin:0;
+	padding:0;
+}
+
+body{
+	overflow: scroll;
+	background-color: rgba(0,0,0,1);
+}
+
+h2, p, label{
+	font-family: 'Open Sans', sans-serif;
+}
+
+h2, p{
+	text-align: left;
+	line-height: 100%;
+}
+
+h2{
+	display: inline;
+	margin-right: 8px;
+	font-size: 12pt;
+	color: rgba(255,255,255,0.7);
+	font-weight: normal;
+}
+
+#Container{
+	padding:20px 10px 20px;
+}
+
+.Option{
+	margin: 10px 70px;
+}
+
+.Option div, .Option p{
+	display: inline;
+}
+
+p, label, select, button{
+	font-size: 12pt;
+}
+
+p, label{
+	color: rgba(255,255,255,0.9);
+}
+
+label{
+	margin-right: 4px;
+}
+
+button{
+	margin: 0px 4px;
+	padding: 0pt 4pt;
+}
+
+#Date p{
+	margin-right: 4px;
+}
+
+#Image, #GpvImage{
+	width: 800px;
+	height: 600px;
+}
+
+#Image{
+	position: relative;
+	margin-top: 12px;
+	text-align: center;
+	background-color: rgba(255,255,255,0.1);
+}
+
+#NoImage{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 100%;
+	text-align: center;
+	color: rgba(255,255,255,0.5);
+	transform: translate(-50%, -50%);
+}
+
+#GpvImage{
+	position: absolute;
+	top: 0;
+	left: 0;
+	background-position: left top;
+	background-repeat: no-repeat;
+}
