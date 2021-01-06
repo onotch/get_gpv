@@ -1,12 +1,11 @@
 @charset "UTF-8";
 
 body, div, h2, p, select, button, img{
-	margin:0;
-	padding:0;
+	margin: 0px;
+	padding: 0px;
 }
 
 body{
-	overflow: scroll;
 	background-color: rgba(0,0,0,1);
 }
 
@@ -23,8 +22,8 @@ h2{
 	display: inline;
 	margin-right: 8px;
 	font-size: 12pt;
-	color: rgba(255,255,255,0.7);
 	font-weight: normal;
+	color: rgba(255,255,255,0.7);
 }
 
 #Container{
@@ -32,7 +31,7 @@ h2{
 }
 
 .Option{
-	margin: 10px 70px;
+	margin: 12px 72px;
 }
 
 .Option div, .Option p{
@@ -60,6 +59,10 @@ button{
 	margin-right: 4px;
 }
 
+#Link{
+	margin-left: 24px;
+}
+
 #Image, #GpvImage{
 	width: 800px;
 	height: 600px;
@@ -84,8 +87,17 @@ button{
 
 #GpvImage{
 	position: absolute;
-	top: 0;
-	left: 0;
+	top: 0px;
+	left: 0px;
 	background-position: left top;
 	background-repeat: no-repeat;
+}
+
+a{
+	color: rgba(255,255,255,0.7);
+	text-decoration: underline;
+}
+
+a:hover{
+	color: rgba(255,255,255,1.0);
 }
