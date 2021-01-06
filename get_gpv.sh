@@ -25,15 +25,15 @@ TYPE=("cp" "th" "wa")
 AREA=("dh" "dn" "kh" "mh" "kt" "cb" "kk" "cs" "ks" "ks" "on" "to" "is")
 
 GPV_URL="http://weather-gpv.info"
-SAVE_DIR_ROOT="archive/images"
-LOG_DIR="log"
-TMP_HTML_FILE="tmp.html"
+SAVE_DIR_ROOT="./archive/images"
+LOG_DIR="./log"
+TMP_HTML_FILE="./tmp.html"
 
 if [ ! -d ${LOG_DIR} ]; then
   mkdir -p ${LOG_DIR}
 fi
 
-year=`date -d "3 hours ago" +"%Y"`
+year=`date -d '3 hours ago' +'%Y'`
 month=`date -d '3 hours ago' +'%m'`
 day=`date -d '3 hours ago' +'%d'`
 hour=`date -d '3 hours ago' +'%H'`
@@ -45,7 +45,7 @@ for type in ${TYPE[@]}; do
     response=`curl -s -o ${TMP_HTML_FILE} -w "%{http_code}" ${url_html}`
 
     if [ ${response} = "200" ]; then
-      save_dir=${SAVE_DIR_ROOT}/${type}/${area}/${year}/${month}/${day}
+      save_dir="${SAVE_DIR_ROOT}/${type}/${area}/${year}/${month}/${day}"
       if [ ! -d ${save_dir} ]; then
         mkdir -p ${save_dir}
       fi
@@ -53,7 +53,7 @@ for type in ${TYPE[@]}; do
       for ((i=1; i<=3; i++)); do
         filename=`grep "fnl\[${i}\]" ${TMP_HTML_FILE} | awk -F'["]' '{print $2}'`
         save_hour=`date -d "$((4-i)) hours ago" +"%H"`
-        save_file_path="./${save_dir}/msm_${type}_${area}_${year}${month}${day}${save_hour}.png"
+        save_file_path="${save_dir}/msm_${type}_${area}_${year}${month}${day}${save_hour}.png"
 
         curl -s -o ${save_file_path} ${GPV_URL}/msm/${filename}
 
