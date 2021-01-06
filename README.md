@@ -17,7 +17,7 @@ $ brew install coreutils
 $ chmod +x get_gpv.sh
 ```
 
-### 4. 定期的に実行させるため以下のいずれかを設定する
+### 4. 定期的（３時間毎）にスクリプトを実行させるためcrontabもしくはlaunchdでジョブスケジューリングする
 #### 4-1. crontabに設定する場合
 ```
 $ crontab cron.conf
@@ -31,7 +31,7 @@ $ launchctl load ~/Library/LaunchAgents/get_gpv.plist
 ```
 **設定ファイル内の`/Users/hoge/`は適切なパスに書き換えてください**
 
-## アーカイブした画像を見る方法
+## アーカイブした画像を見るには
 `archive/index.html`をWebブラウザで開いてください。
 
 ## GPV本家
