@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
 	<meta charset="utf-8" />
 	<meta http-equiv="Pragma" content="no-cache" />
@@ -100,16 +100,31 @@
 				<p>時</p>
 			</div>
 			<div id="Button">
-				<p><button id="PrevButton">◀︎</button><button id="NextButton">▶︎</button></p>
+				<p><button id="PrevButton" class="Play"></button><button id="NextButton" class="Play"></button></p>
+			</div>
+			<div id="AutoPlay">
+				<p><label><input type="checkbox" name="autoplay" value="" />自動再生</label></p>
+				<div id="Speed">
+					<select name="speed" disabled="disabled">
+						<option value="4000">0.5</option>
+						<option value="2000" selected="selected">1</option>
+						<option value="1000">2</option>
+						<option value="500">4</option>
+						<option value="250">8</option>
+					</select>
+					<p>倍速</p>
+				</div>
 			</div>
 			<div id="Link">
-				<p><a href="http://weather-gpv.info/" target="_blank">GPV 気象予報</a></p>
+				<p><a class="External" href="http://weather-gpv.info/" target="_blank">GPV 気象予報</a></p>
 			</div>
 		</div>
 
 		<div id="Image">
 			<p id="NoImage">NO IMAGE</p>
-			<p id="GpvImage"></p>
+			<div id="GpvImage">
+				<div></div>
+			</div>
 		</div>
 	</div>
 </body>
