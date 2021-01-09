@@ -102,6 +102,7 @@ $(document).ready(function() {
 				case AUTO_PLAY_STATUS.REVERSE:
 					stopAutoPlay();
 				default:
+					console.assert(false, 'autoPlayStatus=' + autoPlayStatus);
 					break;
 			}
 		} else {
@@ -119,6 +120,7 @@ $(document).ready(function() {
 				case AUTO_PLAY_STATUS.PLAY:
 					stopAutoPlay();
 				default:
+					console.assert(false, 'autoPlayStatus=' + autoPlayStatus);
 					break;
 			}
 		} else {
@@ -139,6 +141,7 @@ $(document).ready(function() {
 					startAutoPlay(null);
 				case AUTO_PLAY_STATUS.STOP:
 				default:
+					console.assert(false, 'autoPlayStatus=' + autoPlayStatus);
 					break;
 			}
 		}
@@ -240,10 +243,9 @@ $(document).ready(function() {
 		var newElement = currentElement.prev('option');
 		if (newElement.length === 0) {
 			return false;
-		} else {
-			$(ELEM_NAME_SELECT_YEAR).val(newElement.val());
-			return true;
 		}
+		$(ELEM_NAME_SELECT_YEAR).val(newElement.val());
+		return true;
 	}
 
 	function nextYear() {
@@ -251,10 +253,9 @@ $(document).ready(function() {
 		var newElement = currentElement.next('option');
 		if (newElement.length === 0) {
 			return false;
-		} else {
-			$(ELEM_NAME_SELECT_YEAR).val(newElement.val());
-			return true;
 		}
+		$(ELEM_NAME_SELECT_YEAR).val(newElement.val());
+		return true;
 	}
 
 	function initYearOptions() {
@@ -349,6 +350,7 @@ $(document).ready(function() {
 				$(ELEM_NAME_NEXT_BUTTON).addClass(CLASS_NAME_PLAY);
 				break;
 			default:
+				console.assert(false, 'status=' + status);
 				break;
 		}
 	}
