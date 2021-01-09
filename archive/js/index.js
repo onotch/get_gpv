@@ -292,7 +292,7 @@ $(document).ready(function() {
 
 	function initDateSelect() {
 		var now = new Date();
-		now.setHours(now.getHours() - 3);
+		now.setHours(now.getHours() - now.getHours() % 3 - 1);
 		const year = now.getFullYear();
 		const month = now.getMonth() + 1;
 		const day = now.getDate();
