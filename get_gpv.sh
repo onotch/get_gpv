@@ -29,6 +29,17 @@ SAVE_DIR_ROOT="./archive/images"
 LOG_DIR="./log"
 TMP_HTML_FILE="./tmp.html"
 
+function debug_echo () {
+  if "${debug}"; then
+    echo ${1}
+  fi
+}
+
+debug=false
+if [ $# -eq 1 ] && [ ${1} = "--debug" ]; then
+  debug=true
+fi
+
 if [ ! -d ${LOG_DIR} ]; then
   mkdir -p ${LOG_DIR}
 fi
@@ -38,16 +49,19 @@ min=`date +'%-M'`
 if [ ${hour_delta} = 5 ] && [ ${min} -ge 30 ]; then
   hour_delta=2
 fi
+debug_echo "hour_delta=${hour_delta}"
 
 year=`date -d "$((hour_delta)) hours ago" +"%Y"`
 month=`date -d "$((hour_delta)) hours ago" +"%m"`
 day=`date -d "$((hour_delta)) hours ago" +"%d"`
 hour=`date -d "$((hour_delta)) hours ago" +"%k"`
 log_file_path="${LOG_DIR}/error_log_`date +'%Y%m%d'`.txt"
+debug_echo "log_file_path=${log_file_path}"
 
 for type in ${TYPE[@]}; do
   for area in ${AREA[@]}; do
     url_html=${GPV_URL}/msm_${type}_${area}_${year}${month}${day}`printf %02d ${hour}`.html
+    debug_echo "url_html=${url_html}"
     response=`curl -s -o ${TMP_HTML_FILE} -w "%{http_code}" ${url_html}`
 
     if [ ${response} = "200" ]; then
@@ -58,17 +72,26 @@ for type in ${TYPE[@]}; do
 
       for ((i=0; i<3; i++)); do
         filename=`grep "fnl\[$((i+1))\]" ${TMP_HTML_FILE} | awk -F'["]' '{print $2}'`
+        debug_echo "filename=${filename}"
         save_hour=`printf %02d $((hour+i))`
         save_file_path="${save_dir}/msm_${type}_${area}_${year}${month}${day}${save_hour}.png"
 
-        curl -s -o ${save_file_path} ${GPV_URL}/msm/${filename}
-
         if [ ! -e ${save_file_path} ]; then
-          echo "`date +'%F %T'` : failed to download ${filename}" >> ${log_file_path}
+          curl -s -o ${save_file_path} ${GPV_URL}/msm/${filename}
+
+          if [ ! -e ${save_file_path} ]; then
+            echo "`date +'%F %T'` : failed to download ${filename}" >> ${log_file_path}
+            debug_echo "failed to download ${filename}"
+          else
+            debug_echo "${save_file_path} has been downloaded"
+          fi
+        else
+          debug_echo "${save_file_path} already exists"
         fi
       done
     else
         echo "`date +'%F %T'` : failed to download ${url_html}" >> ${log_file_path}
+        debug_echo "failed to download ${url_html}"
     fi
 
     rm ${TMP_HTML_FILE} > /dev/null 2>&1
