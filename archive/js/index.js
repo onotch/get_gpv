@@ -15,9 +15,22 @@ $(document).ready(function() {
 	const KEY_CODE_LEFT = 37;
 	const KEY_CODE_RIGHT = 39;
 
+	const ELEM_NAME_INPUT_AREA      = 'input[name=area]';
+	const ELEM_NAME_INPUT_TYPE      = 'input[name=type]';
+	const ELEM_NAME_SELECT_YEAR     = 'select[name=year]';
+	const ELEM_NAME_SELECT_MONTH    = 'select[name=month]';
+	const ELEM_NAME_SELECT_DAY      = 'select[name=day]';
+	const ELEM_NAME_SELECT_HOUR     = 'select[name=hour]';
+	const ELEM_NAME_INPUT_AUTO_PLAY = 'input[name=autoplay]';
+	const ELEM_NAME_SELECT_SPEED    = 'select[name=speed]';
+	const ELEM_NAME_PREV_BUTTON     = '#PrevButton';
+	const ELEM_NAME_NEXT_BUTTON     = '#NextButton';
+	const ELEM_NAME_GPV_IMAGE       = '#GpvImage';
+	const CLASS_NAME_PLAY           = 'Play';
+	const CLASS_NAME_PAUSE          = 'Pause';
+
 	var autoPlayTimer;
 	var isPlaying = false;
-	var isNormalPlay = true;
 	var autoPlayStatus = AUTO_PLAY_STATUS.STOP;
 
 	//
@@ -46,52 +59,45 @@ $(document).ready(function() {
 		}
 	});
 
-	$('input[name=area]').change(function() {
+	$(ELEM_NAME_INPUT_AREA).change(function() {
 		stopAutoPlay();
 		resetGpvImage();
 	});
 
-	$('input[name=type]').change(function() {
+	$(ELEM_NAME_INPUT_TYPE).change(function() {
 		stopAutoPlay();
 		resetGpvImage();
 	});
 
-	$('select[name=year]').change(function() {
+	$(ELEM_NAME_SELECT_YEAR).change(function() {
 		stopAutoPlay();
 		resetGpvImage();
 	});
 
-	$('select[name=month]').change(function() {
+	$(ELEM_NAME_SELECT_MONTH).change(function() {
 		stopAutoPlay();
-		const year = $('select[name=year] > option:selected').val();
-		const month = $('select[name=month] > option:selected').val()
+		const year = $(ELEM_NAME_SELECT_YEAR + ' > option:selected').val();
+		const month = $(ELEM_NAME_SELECT_MONTH + ' > option:selected').val()
 		initDayOptions(year, month);
 		resetGpvImage();
 	});
 
-	$('select[name=day]').change(function() {
+	$(ELEM_NAME_SELECT_DAY).change(function() {
 		stopAutoPlay();
 		resetGpvImage();
 	});
 
-	$('select[name=hour]').change(function() {
+	$(ELEM_NAME_SELECT_HOUR).change(function() {
 		stopAutoPlay();
 		resetGpvImage();
 	});
 
-	$('#PrevButton').click(function() {
-		if ($('input[name=autoplay]').prop('checked')) {
-			clearTimeout(autoPlayTimer);
+	$(ELEM_NAME_PREV_BUTTON).click(function() {
+		if ($(ELEM_NAME_INPUT_AUTO_PLAY).prop('checked')) {
 			switch (autoPlayStatus) {
 				case AUTO_PLAY_STATUS.STOP:
 				case AUTO_PLAY_STATUS.PLAY:
-					autoPlayStatus = AUTO_PLAY_STATUS.REVERSE;
-					isNormalPlay = false;
-					autoPlay();
-					$('#NextButton').removeClass('Pause');
-					$('#NextButton').addClass('Play');
-					$(this).removeClass('Play');
-					$(this).addClass('Pause');
+					startAutoPlay(AUTO_PLAY_STATUS.REVERSE);
 					break;
 				case AUTO_PLAY_STATUS.REVERSE:
 					stopAutoPlay();
@@ -103,19 +109,12 @@ $(document).ready(function() {
 		}
 	});
 
-	$('#NextButton').click(function() {
-		if ($('input[name=autoplay]').prop('checked')) {
-			clearTimeout(autoPlayTimer);
+	$(ELEM_NAME_NEXT_BUTTON).click(function() {
+		if ($(ELEM_NAME_INPUT_AUTO_PLAY).prop('checked')) {
 			switch (autoPlayStatus) {
 				case AUTO_PLAY_STATUS.STOP:
 				case AUTO_PLAY_STATUS.REVERSE:
-					autoPlayStatus = AUTO_PLAY_STATUS.PLAY;
-					isNormalPlay = true;
-					autoPlay();
-					$('#PrevButton').removeClass('Pause');
-					$('#PrevButton').addClass('Play');
-					$(this).removeClass('Play');
-					$(this).addClass('Pause');
+					startAutoPlay(AUTO_PLAY_STATUS.PLAY);
 					break;
 				case AUTO_PLAY_STATUS.PLAY:
 					stopAutoPlay();
@@ -127,18 +126,17 @@ $(document).ready(function() {
 		}
 	});
 
-	$('input[name=autoplay]').change(function() {
-		$('select[name=speed]').attr('disabled', !$(this).prop('checked'));
+	$(ELEM_NAME_INPUT_AUTO_PLAY).change(function() {
+		$(ELEM_NAME_SELECT_SPEED).attr('disabled', !$(this).prop('checked'));
 		stopAutoPlay();
 	});
 
-	$('select[name=speed]').change(function() {
-		if ($('input[name=autoplay]').prop('checked')) {
+	$(ELEM_NAME_SELECT_SPEED).change(function() {
+		if ($(ELEM_NAME_INPUT_AUTO_PLAY).prop('checked')) {
 			switch (autoPlayStatus) {
 				case AUTO_PLAY_STATUS.PLAY:
 				case AUTO_PLAY_STATUS.REVERSE:
-					clearTimeout(autoPlayTimer);
-					autoPlay();
+					startAutoPlay(null);
 				case AUTO_PLAY_STATUS.STOP:
 				default:
 					break;
@@ -150,111 +148,111 @@ $(document).ready(function() {
 	// functions
 	//
 	function prevHour() {
-		var currentElement = $('select[name=hour] > option:selected');
+		var currentElement = $(ELEM_NAME_SELECT_HOUR + ' > option:selected');
 		var newElement = currentElement.prev('option');
 		if (newElement.length === 0) {
 			if (prevDay()) {
-				newElement = $('select[name=hour] > option').last();
+				newElement = $(ELEM_NAME_SELECT_HOUR + ' > option').last();
 			} else {
 				return;
 			}
 		}
-		$('select[name=hour]').val(newElement.val());
+		$(ELEM_NAME_SELECT_HOUR).val(newElement.val());
 		resetGpvImage();
 	}
 
 	function nextHour() {
-		var currentElement = $('select[name=hour] > option:selected');
+		var currentElement = $(ELEM_NAME_SELECT_HOUR + ' > option:selected');
 		var newElement = currentElement.next('option');
 		if (newElement.length === 0) {
 			if (nextDay()) {
-				newElement = $('select[name=hour] > option').first();
+				newElement = $(ELEM_NAME_SELECT_HOUR + ' > option').first();
 			} else {
 				return;
 			}
 		}
-		$('select[name=hour]').val(newElement.val());
+		$(ELEM_NAME_SELECT_HOUR).val(newElement.val());
 		resetGpvImage();
 	}
 
 	function prevDay() {
-		var currentElement = $('select[name=day] > option:selected');
+		var currentElement = $(ELEM_NAME_SELECT_DAY + ' > option:selected');
 		var newElement = currentElement.prev('option');
 		if (newElement.length === 0) {
 			if (prevMonth()) {
-				newElement = $('select[name=day] > option').last();
+				newElement = $(ELEM_NAME_SELECT_DAY + ' > option').last();
 			} else {
 				return false;
 			}
 		}
-		$('select[name=day]').val(newElement.val());
+		$(ELEM_NAME_SELECT_DAY).val(newElement.val());
 		return true;
 	}
 
 	function nextDay() {
-		var currentElement = $('select[name=day] > option:selected');
+		var currentElement = $(ELEM_NAME_SELECT_DAY + ' > option:selected');
 		var newElement = currentElement.next('option');
 		if (newElement.length === 0) {
 			if (nextMonth()) {
-				newElement = $('select[name=day] > option').first();
+				newElement = $(ELEM_NAME_SELECT_DAY + ' > option').first();
 			} else {
 				return false;
 			}
 		}
-		$('select[name=day]').val(newElement.val());
+		$(ELEM_NAME_SELECT_DAY).val(newElement.val());
 		return true;
 	}
 
 	function prevMonth() {
-		var currentElement = $('select[name=month] > option:selected');
+		var currentElement = $(ELEM_NAME_SELECT_MONTH + ' > option:selected');
 		var newElement = currentElement.prev('option');
 		if (newElement.length === 0) {
 			if (prevYear()) {
-				newElement = $('select[name=month] > option').last();
+				newElement = $(ELEM_NAME_SELECT_MONTH + ' > option').last();
 			} else {
 				return false;
 			}
 		}
-		$('select[name=month]').val(newElement.val());
-		const year = $('select[name=year] > option:selected').val();
+		$(ELEM_NAME_SELECT_MONTH).val(newElement.val());
+		const year = $(ELEM_NAME_SELECT_YEAR + ' > option:selected').val();
 		initDayOptions(year, newElement.val());
 		return true;
 	}
 
 	function nextMonth() {
-		var currentElement = $('select[name=month] > option:selected');
+		var currentElement = $(ELEM_NAME_SELECT_MONTH + ' > option:selected');
 		var newElement = currentElement.next('option');
 		if (newElement.length === 0) {
 			if (nextYear()) {
-				newElement = $('select[name=month] > option').first();
+				newElement = $(ELEM_NAME_SELECT_MONTH + ' > option').first();
 			} else {
 				return false;
 			}
 		}
-		$('select[name=month]').val(newElement.val());
-		const year = $('select[name=year] > option:selected').val();
+		$(ELEM_NAME_SELECT_MONTH).val(newElement.val());
+		const year = $(ELEM_NAME_SELECT_YEAR + ' > option:selected').val();
 		initDayOptions(year, newElement.val());
 		return true;
 	}
 
 	function prevYear() {
-		var currentElement = $('select[name=year] > option:selected');
+		var currentElement = $(ELEM_NAME_SELECT_YEAR + ' > option:selected');
 		var newElement = currentElement.prev('option');
 		if (newElement.length === 0) {
 			return false;
 		} else {
-			$('select[name=year]').val(newElement.val());
+			$(ELEM_NAME_SELECT_YEAR).val(newElement.val());
 			return true;
 		}
 	}
 
 	function nextYear() {
-		var currentElement = $('select[name=year] > option:selected');
+		var currentElement = $(ELEM_NAME_SELECT_YEAR + ' > option:selected');
 		var newElement = currentElement.next('option');
 		if (newElement.length === 0) {
 			return false;
 		} else {
-			$('select[name=year]').val(newElement.val());
+			$(ELEM_NAME_SELECT_YEAR).val(newElement.val());
 			return true;
 		}
 	}
@@ -262,7 +260,7 @@ $(document).ready(function() {
 	function initYearOptions() {
 		const thisYear = (new Date()).getFullYear();
 		for (var i = START_YEAR; i <= thisYear; i++) {
-			$('select[name=year]').append('<option value="' + i + '">' + i + '</option>');
+			$(ELEM_NAME_SELECT_YEAR).append('<option value="' + i + '">' + i + '</option>');
 		}
 	}
 
@@ -273,20 +271,20 @@ $(document).ready(function() {
 		}
 
 		var prevDay = null;
-		if ($('select[name=day] > option').length > 0) {
-			prevDay = $('select[name=day] > option:selected').val();
-			$('select[name=day]').empty();
+		if ($(ELEM_NAME_SELECT_DAY + ' > option').length > 0) {
+			prevDay = $(ELEM_NAME_SELECT_DAY + ' > option:selected').val();
+			$(ELEM_NAME_SELECT_DAY).empty();
 		}
 
 		for (var i = 1; i <= lastDay[month]; i++) {
-			$('select[name=day]').append('<option value="' + i + '">' + i + '</option>');
+			$(ELEM_NAME_SELECT_DAY).append('<option value="' + i + '">' + i + '</option>');
 		}
 
 		if (prevDay !== null) {
 			if (prevDay > lastDay[month]) {
 				prevDay = lastDay[month];
 			}
-			$('select[name=day]').val(prevDay);
+			$(ELEM_NAME_SELECT_DAY).val(prevDay);
 		}
 	}
 
@@ -297,48 +295,71 @@ $(document).ready(function() {
 		const month = now.getMonth() + 1;
 		const day = now.getDate();
 		const hour = now.getHours();
-		$('select[name=year]').val(year);
-		$('select[name=month]').val(month);
-		$('select[name=day]').val(day);
-		$('select[name=hour]').val(hour);
+		$(ELEM_NAME_SELECT_YEAR).val(year);
+		$(ELEM_NAME_SELECT_MONTH).val(month);
+		$(ELEM_NAME_SELECT_DAY).val(day);
+		$(ELEM_NAME_SELECT_HOUR).val(hour);
 	}
 
 	function resetGpvImage() {
-		const area = $('input[name=area]:checked').val();
-		const type = $('input[name=type]:checked').val();
-		const year = $('select[name=year]').val();
-		const month = toDoubleDigits($('select[name=month]').val());
-		const day = toDoubleDigits($('select[name=day]').val());
-		const hour = toDoubleDigits($('select[name=hour]').val());
+		const area = $(ELEM_NAME_INPUT_AREA + ':checked').val();
+		const type = $(ELEM_NAME_INPUT_TYPE + ':checked').val();
+		const year = $(ELEM_NAME_SELECT_YEAR).val();
+		const month = toDoubleDigits($(ELEM_NAME_SELECT_MONTH).val());
+		const day = toDoubleDigits($(ELEM_NAME_SELECT_DAY).val());
+		const hour = toDoubleDigits($(ELEM_NAME_SELECT_HOUR).val());
 		const delay = autoPlayStatus === AUTO_PLAY_STATUS.STOP ? ANIMATION_DURATION : ANIMATION_DURATION_AUTO;
 
 		const path = 'images/' + type + '/' + area + '/' + year + '/' + month + '/' + day + '/'
 			+ 'msm_' + type + '_' + area + '_' + year + month + day + hour + '.png';
 		//console.log(path);
 
-		$('#GpvImage').append('<div></div>');
-		$('#GpvImage > div').last().css('animation-duration', delay + 'ms');
-		$('#GpvImage > div').last().css('background-image', 'url(' + path + ')');
-		$('#GpvImage > div').first().delay(delay).queue(function() {
+		$(ELEM_NAME_GPV_IMAGE).append('<div></div>');
+		$(ELEM_NAME_GPV_IMAGE + '> div').last().css('animation-duration', delay + 'ms');
+		$(ELEM_NAME_GPV_IMAGE + '> div').last().css('background-image', 'url(' + path + ')');
+		$(ELEM_NAME_GPV_IMAGE + '> div').first().delay(delay).queue(function() {
 			$(this).remove();
 		})
 	}
 
 	function autoPlay() {
-		const interval = $('select[name=speed] > option:selected').val();
+		const interval = $(ELEM_NAME_SELECT_SPEED + ' > option:selected').val();
 		autoPlayTimer = setTimeout(function() {
-			isNormalPlay ? nextHour() : prevHour();
+			autoPlayStatus === AUTO_PLAY_STATUS.PLAY ? nextHour() : prevHour();
 			autoPlay();
 		}, interval);
+	}
+
+	function startAutoPlay(status) {
+		clearTimeout(autoPlayTimer);
+		autoPlay();
+		switch (status) {
+			case AUTO_PLAY_STATUS.PLAY:
+				autoPlayStatus = status;
+				$(ELEM_NAME_PREV_BUTTON).removeClass(CLASS_NAME_PAUSE);
+				$(ELEM_NAME_PREV_BUTTON).addClass(CLASS_NAME_PLAY);
+				$(ELEM_NAME_NEXT_BUTTON).removeClass(CLASS_NAME_PLAY);
+				$(ELEM_NAME_NEXT_BUTTON).addClass(CLASS_NAME_PAUSE);
+				break;
+			case AUTO_PLAY_STATUS.REVERSE:
+				autoPlayStatus = status;
+				$(ELEM_NAME_PREV_BUTTON).removeClass(CLASS_NAME_PLAY);
+				$(ELEM_NAME_PREV_BUTTON).addClass(CLASS_NAME_PAUSE);
+				$(ELEM_NAME_NEXT_BUTTON).removeClass(CLASS_NAME_PAUSE);
+				$(ELEM_NAME_NEXT_BUTTON).addClass(CLASS_NAME_PLAY);
+				break;
+			default:
+				break;
+		}
 	}
 
 	function stopAutoPlay() {
 		autoPlayStatus = AUTO_PLAY_STATUS.STOP;
 		clearTimeout(autoPlayTimer);
-		$('#PrevButton').removeClass('Pause');
-		$('#PrevButton').addClass('Play');
-		$('#NextButton').removeClass('Pause');
-		$('#NextButton').addClass('Play');
+		$(ELEM_NAME_PREV_BUTTON).removeClass(CLASS_NAME_PAUSE);
+		$(ELEM_NAME_PREV_BUTTON).addClass(CLASS_NAME_PLAY);
+		$(ELEM_NAME_NEXT_BUTTON).removeClass(CLASS_NAME_PAUSE);
+		$(ELEM_NAME_NEXT_BUTTON).addClass(CLASS_NAME_PLAY);
 	}
 
 	function toDoubleDigits(n) {
