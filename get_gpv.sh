@@ -33,7 +33,12 @@ if [ ! -d ${LOG_DIR} ]; then
   mkdir -p ${LOG_DIR}
 fi
 
-hour_delta=$((`date +'%k'`%3))
+hour_delta=$((`date +'%k'`%3+3))
+min=`date +'%-M'`
+if [ ${hour_delta} = 5 ] && [ ${min} -ge 30 ]; then
+  hour_delta=2
+fi
+
 year=`date -d "$((hour_delta)) hours ago" +"%Y"`
 month=`date -d "$((hour_delta)) hours ago" +"%m"`
 day=`date -d "$((hour_delta)) hours ago" +"%d"`
