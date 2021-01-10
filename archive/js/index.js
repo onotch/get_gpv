@@ -48,11 +48,15 @@ $(document).ready(function() {
 	$(this).keydown(function(event) {
 		switch (event.keyCode) {
 			case KEY_CODE_LEFT:
-				stopAutoPlay();
+				if (autoPlayStatus !== AUTO_PLAY_STATUS.STOP) {
+					stopAutoPlay();
+				}
 				prevHour();
 				break;
 			case KEY_CODE_RIGHT:
-				stopAutoPlay();
+				if (autoPlayStatus !== AUTO_PLAY_STATUS.STOP) {
+					stopAutoPlay();
+				}
 				nextHour();
 				break;
 			default:
@@ -102,6 +106,7 @@ $(document).ready(function() {
 					break;
 				case AUTO_PLAY_STATUS.REVERSE:
 					stopAutoPlay();
+					break;
 				default:
 					console.assert(false, 'autoPlayStatus=' + autoPlayStatus);
 					break;
@@ -120,6 +125,7 @@ $(document).ready(function() {
 					break;
 				case AUTO_PLAY_STATUS.PLAY:
 					stopAutoPlay();
+					break;
 				default:
 					console.assert(false, 'autoPlayStatus=' + autoPlayStatus);
 					break;
@@ -153,6 +159,10 @@ $(document).ready(function() {
 	// functions
 	//
 	function prevHour() {
+		if ($(ELEM_NAME_GPV_IMAGE + '> div').length > 1) {
+			return;
+		}
+
 		var currentElement = $(ELEM_NAME_SELECT_HOUR + ' > option:selected');
 		var newElement = currentElement.prev('option');
 		if (newElement.length === 0) {
@@ -167,6 +177,10 @@ $(document).ready(function() {
 	}
 
 	function nextHour() {
+		if ($(ELEM_NAME_GPV_IMAGE + '> div').length > 1) {
+			return;
+		}
+
 		var currentElement = $(ELEM_NAME_SELECT_HOUR + ' > option:selected');
 		var newElement = currentElement.next('option');
 		if (newElement.length === 0) {
