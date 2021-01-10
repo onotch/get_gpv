@@ -136,11 +136,12 @@ $(document).ready(function() {
 	});
 
 	$(ELEM_NAME_INPUT_AUTO_PLAY).change(function() {
-		$(ELEM_NAME_SELECT_SPEED).attr('disabled', !$(this).prop('checked'));
+		// $(ELEM_NAME_SELECT_SPEED).prop('disabled', !$(this).prop('checked'));
 		stopAutoPlay();
 	});
 
 	$(ELEM_NAME_SELECT_SPEED).change(function() {
+		console.log($(ELEM_NAME_INPUT_AUTO_PLAY).prop('checked'));
 		if ($(ELEM_NAME_INPUT_AUTO_PLAY).prop('checked')) {
 			switch (autoPlayStatus) {
 				case AUTO_PLAY_STATUS.PLAY:
@@ -152,6 +153,8 @@ $(document).ready(function() {
 					console.assert(false, 'autoPlayStatus=' + autoPlayStatus);
 					break;
 			}
+		} else {
+			$(ELEM_NAME_INPUT_AUTO_PLAY).prop('checked', true);
 		}
 	});
 
