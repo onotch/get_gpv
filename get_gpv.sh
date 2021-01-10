@@ -45,6 +45,7 @@ if [ ! -d ${LOG_DIR} ]; then
   mkdir -p ${LOG_DIR}
 fi
 
+# GPV update time: 2:30, 5:30, 8:30, 11:30, 14:30, 17:30, 20:30, 23:30
 hour_delta=$((`date +'%k'`%3+3))
 if [ ${hour_delta} = 5 ] && [ `date +'%-M'` -ge 30 ]; then
   hour_delta=2
@@ -57,6 +58,12 @@ readonly DAY=`date -d "$((hour_delta)) hours ago" +"%d"`
 readonly HOUR=`date -d "$((hour_delta)) hours ago" +"%k"`
 readonly LOG_FILE_PATH="${LOG_DIR}/error_log_`date +'%Y%m%d'`.txt"
 debug_echo "LOG_FILE_PATH=${LOG_FILE_PATH}"
+
+file_count_success=0
+file_count_fail=0
+file_count_exist=0
+file_count_html_fail=0
+total_file_size=0
 
 for type in ${TYPE[@]}
 do
@@ -76,23 +83,29 @@ do
       do
         filename=`grep "fnl\[$((i+1))\]" ${TMP_HTML_FILE} | awk -F'["]' '{print $2}'`
         debug_echo "filename=${filename}"
-        save_hour=`printf %02d $((HOUR+i))`
-        save_file_path="${save_dir}/msm_${type}_${area}_${YEAR}${MONTH}${DAY}${save_hour}.png"
+        save_file_path=${save_dir}/msm_${type}_${area}_${YEAR}${MONTH}${DAY}`printf %02d $((HOUR+i))`.png
 
         if [ ! -e ${save_file_path} ]; then
           curl -s -o ${save_file_path} ${GPV_URL}/msm/${filename}
 
           if [ ! -e ${save_file_path} ]; then
+            file_count_fail=$((file_count_fail+1))
             echo "`date +'%F %T'` : failed to download ${filename}" >> ${LOG_FILE_PATH}
             debug_echo "failed to download ${filename}"
           else
-            debug_echo "${save_file_path} has been downloaded"
+            file_count_success=$((file_count_success+1))
+            file_size=`wc -c ${save_file_path} | awk '{print $1}'`
+            total_file_size=$((total_file_size + file_size))
+            file_size_p=`printf "%'d" ${file_size}`
+            debug_echo "${save_file_path} (${file_size_p} bytes) has been downloaded"
           fi
         else
+          file_count_exist=$((file_count_exist+1))
           debug_echo "${save_file_path} already exists"
         fi
       done
     else
+        file_count_html_fail=$((file_count_html_fail+1))
         echo "`date +'%F %T'` : failed to download ${url_html}" >> ${LOG_FILE_PATH}
         debug_echo "failed to download ${url_html}"
     fi
@@ -100,3 +113,11 @@ do
     rm ${TMP_HTML_FILE} > /dev/null 2>&1
   done
 done
+
+debug_echo "--- RESULT ---"
+file_size_p=`printf "%'d" ${total_file_size}`
+debug_echo "Succes: ${file_count_success}"
+debug_echo "Fail: ${file_count_fail}"
+debug_echo "Already exist: ${file_count_exist}"
+debug_echo "HTML not found: ${file_count_html_fail}"
+debug_echo "Total download file size: ${file_size_p} bytes"

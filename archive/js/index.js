@@ -3,7 +3,7 @@ $(document).ready(function() {
 
 	const START_YEAR = 2021;
 
-	const JOB_SCHEDULED_TIME_MIN = 45;
+	const JOB_SCHEDULED_TIME_MIN = 40;
 
 	const AUTO_PLAY_STATUS = {
 		STOP : 0,
