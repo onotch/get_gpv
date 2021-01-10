@@ -32,15 +32,19 @@ h2{
 }
 
 #Container{
-	padding:20px 10px 20px;
+	padding: 20px 10px 20px;
 }
 
-.Option{
-	margin: 12px 72px;
+#Area, #Type, #Date{
+	margin-left: 72px;
 }
 
-.Option div, .Option p{
+.Option div, .Option p, #Date, #Control, #Link, #Link p{
 	display: inline;
+}
+
+.Option, #Link{
+	margin: 12px 0px;
 }
 
 p, label, select, button{
@@ -168,3 +172,66 @@ a:hover{
 	animation-name: fade-in;
 	animation-timing-function: linear;
 }
+
+/*
+ * for Smartphone
+ */
+@media only screen and (max-width: 800px) {
+h2{
+	display: none;
+}
+
+.Option, #Control, #Link{
+	display: block;
+	width: 100%;
+	margin: 36px 0px;
+}
+
+#Area, #Type, #Date{
+	margin-left: 0px;
+}
+
+p, label, select, button{
+	font-size: 36pt;
+}
+
+label{
+	margin-right: 12px;
+}
+
+button{
+	width: 144px;
+	height: 144px;
+	vertical-align: -55%;
+}
+
+button:first-child{
+	margin-right: 12px;
+}
+
+#Date p{
+	margin-right: 0px;
+}
+
+#Button{
+	margin-left: 0px;
+}
+
+#AutoPlay{
+	margin-left: 24px;
+}
+
+#Link{
+	display: block;
+	margin: 36px 0px ;
+}
+
+.External{
+	padding-right: 42pt;
+}
+
+#Image{
+	margin-top: 36px;
+}
+}
+
