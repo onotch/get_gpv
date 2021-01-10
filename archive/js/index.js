@@ -3,6 +3,8 @@ $(document).ready(function() {
 
 	const START_YEAR = 2021;
 
+	const JOB_SCHEDULED_TIME_MIN = 45;
+
 	const AUTO_PLAY_STATUS = {
 		STOP : 0,
 		PLAY : 1,
@@ -12,7 +14,7 @@ $(document).ready(function() {
 	const ANIMATION_DURATION_MANUAL = 100;
 	const ANIMATION_DURATION_AUTO   = 200;
 
-	const KEY_CODE_LEFT = 37;
+	const KEY_CODE_LEFT  = 37;
 	const KEY_CODE_RIGHT = 39;
 
 	const ELEM_NAME_INPUT_AREA      = 'input[name=area]';
@@ -29,8 +31,7 @@ $(document).ready(function() {
 	const CLASS_NAME_PLAY           = 'Play';
 	const CLASS_NAME_PAUSE          = 'Pause';
 
-	var autoPlayTimer;
-	var isPlaying = false;
+	var autoPlayTimer = null;
 	var autoPlayStatus = AUTO_PLAY_STATUS.STOP;
 
 	//
@@ -292,7 +293,11 @@ $(document).ready(function() {
 
 	function initDateSelect() {
 		var now = new Date();
-		now.setHours(now.getHours() - now.getHours() % 3 - 1);
+		var hour_delta = now.getHours() % 3 + 1;
+		if (hour_delta === 3 && now.getMinutes() >= JOB_SCHEDULED_TIME_MIN) {
+			hour_delta = 0;
+		}
+		now.setHours(now.getHours() - hour_delta);
 		const year = now.getFullYear();
 		const month = now.getMonth() + 1;
 		const day = now.getDate();
@@ -351,6 +356,7 @@ $(document).ready(function() {
 				$(ELEM_NAME_NEXT_BUTTON).addClass(CLASS_NAME_PLAY);
 				break;
 			case AUTO_PLAY_STATUS.STOP:
+				console.warn('status=' + status);
 				stopAutoPlay();
 				break;
 			default:
