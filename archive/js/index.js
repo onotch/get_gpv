@@ -9,8 +9,8 @@ $(document).ready(function() {
 		REVERSE : 2
 	};
 
-	const ANIMATION_DURATION = 100;
-	const ANIMATION_DURATION_AUTO = 200;
+	const ANIMATION_DURATION_MANUAL = 100;
+	const ANIMATION_DURATION_AUTO   = 200;
 
 	const KEY_CODE_LEFT = 37;
 	const KEY_CODE_RIGHT = 39;
@@ -140,6 +140,7 @@ $(document).ready(function() {
 				case AUTO_PLAY_STATUS.REVERSE:
 					startAutoPlay(null);
 				case AUTO_PLAY_STATUS.STOP:
+					break;
 				default:
 					console.assert(false, 'autoPlayStatus=' + autoPlayStatus);
 					break;
@@ -309,7 +310,7 @@ $(document).ready(function() {
 		const month = toDoubleDigits($(ELEM_NAME_SELECT_MONTH).val());
 		const day = toDoubleDigits($(ELEM_NAME_SELECT_DAY).val());
 		const hour = toDoubleDigits($(ELEM_NAME_SELECT_HOUR).val());
-		const delay = autoPlayStatus === AUTO_PLAY_STATUS.STOP ? ANIMATION_DURATION : ANIMATION_DURATION_AUTO;
+		const delay = autoPlayStatus === AUTO_PLAY_STATUS.STOP ? ANIMATION_DURATION_MANUAL : ANIMATION_DURATION_AUTO;
 
 		const path = 'images/' + type + '/' + area + '/' + year + '/' + month + '/' + day + '/'
 			+ 'msm_' + type + '_' + area + '_' + year + month + day + hour + '.png';
@@ -349,8 +350,10 @@ $(document).ready(function() {
 				$(ELEM_NAME_NEXT_BUTTON).removeClass(CLASS_NAME_PAUSE);
 				$(ELEM_NAME_NEXT_BUTTON).addClass(CLASS_NAME_PLAY);
 				break;
+			case AUTO_PLAY_STATUS.STOP:
+				stopAutoPlay();
+				break;
 			default:
-				console.assert(false, 'status=' + status);
 				break;
 		}
 	}

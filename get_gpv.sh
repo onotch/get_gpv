@@ -22,7 +22,7 @@ readonly TYPE=("cp" "th" "wa")
 # on: Okinawa
 # to: Amami
 # is: Izu-Shoto
-readonly AREA=("dh" "dn" "kh" "mh" "kt" "cb" "kk" "cs" "ks" "ks" "on" "to" "is")
+readonly AREA=("dh" "dn" "kh" "mh" "kt" "cb" "kk" "cs" "ks" "on" "to" "is")
 
 readonly GPV_URL="http://weather-gpv.info"
 readonly SAVE_DIR_ROOT="./archive/images"
