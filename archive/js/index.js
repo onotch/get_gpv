@@ -309,6 +309,10 @@ $(document).ready(function() {
 	}
 
 	function resetGpvImage() {
+		if ($(ELEM_NAME_GPV_IMAGE + '> div').length > 1) {
+			return;
+		}
+
 		const area = $(ELEM_NAME_INPUT_AREA + ':checked').val();
 		const type = $(ELEM_NAME_INPUT_TYPE + ':checked').val();
 		const year = $(ELEM_NAME_SELECT_YEAR).val();
