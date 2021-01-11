@@ -114,8 +114,8 @@ do
   done
 done
 
-debug_echo "--- RESULT ---"
 file_size_p=`printf "%'d" ${total_file_size}`
+debug_echo "--- RESULT ---"
 debug_echo "Succes: ${file_count_success}"
 debug_echo "Fail: ${file_count_fail}"
 debug_echo "Already exist: ${file_count_exist}"
