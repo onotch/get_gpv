@@ -16,8 +16,10 @@
 
 <body>
 	<div id="Container">
+		<h2>GPV Archive</h2>
+
 		<div id="Area" class="Option">
-			<h2>地域</h2>
+			<h3>地域</h3>
 			<div>
 				<label><input type="radio" name="area" value="dh" />道北</label>
 				<label><input type="radio" name="area" value="dn" />道南</label>
@@ -35,7 +37,7 @@
 		</div>
 
 		<div id="Type" class="Option">
-			<h2>種別</h2>
+			<h3>種別</h3>
 			<div>
 				<label><input type="radio" name="type" value="cp" checked="checked" />雨量・雲量</label>
 				<label><input type="radio" name="type" value="wa" />気圧・風速</label>
@@ -130,6 +132,11 @@
 			<div id="GpvImage">
 				<div></div>
 			</div>
+		</div>
+
+		<h2>GPV気象予報</h2>
+		<div id="GpvFrame">
+			<iframe></iframe>
 		</div>
 	</div>
 </body>

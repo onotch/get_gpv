@@ -5,7 +5,7 @@
 	100% {opacity: 1;}
 }
 
-body, div, h2, p, select, button, img{
+body, div, h1, h2, h3, p, select, button, img{
 	margin: 0px;
 	padding: 0px;
 }
@@ -14,16 +14,20 @@ body{
 	background-color: rgba(0,0,0,1);
 }
 
-h2, p, label{
+h2, h3, p, label{
 	font-family: 'Open Sans', sans-serif;
-}
-
-h2, p{
 	text-align: left;
 	line-height: 100%;
 }
 
 h2{
+	margin: 12px 28px 12px;
+	font-size: 16pt;
+	font-weight: bold;
+	color: rgba(255,255,255,0.7);
+}
+
+h3{
 	display: inline;
 	margin-right: 8px;
 	font-size: 12pt;
@@ -32,7 +36,7 @@ h2{
 }
 
 #Container{
-	padding: 20px 10px 20px;
+	padding: 12px 10px 20px;
 }
 
 #Area, #Type, #Date{
@@ -173,11 +177,17 @@ a:hover{
 	animation-timing-function: linear;
 }
 
+#GpvFrame iframe{
+	width: 800px;
+	height: 710px;
+	border: none;
+}
+
 /*
  * for Smartphone
  */
 @media only screen and (max-width: 800px) {
-h2{
+h2, h3{
 	display: none;
 }
 
