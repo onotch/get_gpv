@@ -27,6 +27,14 @@ h2{
 	color: rgba(255,255,255,0.7);
 }
 
+h2:first-child{
+	padding-left: 22pt;
+	background-position: left 50%;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-image: url('../favicon/favicon_152.png');
+}
+
 h3{
 	display: inline;
 	margin-right: 8px;
