@@ -43,22 +43,6 @@ h3{
 	color: rgba(255,255,255,0.7);
 }
 
-#Container{
-	padding: 12px 10px 20px;
-}
-
-#Area, #Type, #Date{
-	margin-left: 72px;
-}
-
-.Option div, .Option p, #Date, #Control, #Link, #Link p{
-	display: inline;
-}
-
-.Option{
-	margin: 12px 0px;
-}
-
 p, label, select, button{
 	font-size: 12pt;
 }
@@ -96,38 +80,6 @@ button:hover{
 	opacity: 1;
 }
 
-#Date p{
-	margin-right: 4px;
-}
-
-#Button{
-	margin-left: 8px;
-}
-
-#Button p{
-	margin: 0px;
-}
-
-#PrevButton{
-	transform: scale(-1, 1);
-}
-
-.Play{
-	background-image: url('data:image/svg+xml;charset=utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22white%22%20width%3D%2218px%22%20height%3D%2218px%22%3E%3Cpath%20d%3D%22M12%202C6.48%202%202%206.48%202%2012s4.48%2010%2010%2010%2010-4.48%2010-10S17.52%202%2012%202zm-2%2013.5v-7c0-.41.47-.65.8-.4l4.67%203.5c.27.2.27.6%200%20.8l-4.67%203.5c-.33.25-.8.01-.8-.4z%22%2F%3E%3C%2Fsvg%3E');
-}
-
-.Pause{
-	background-image: url('data:image/svg+xml;charset=utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22white%22%20width%3D%2218px%22%20height%3D%2218px%22%3E%3Cpath%20d%3D%22M12%202C6.48%202%202%206.48%202%2012s4.48%2010%2010%2010%2010-4.48%2010-10S17.52%202%2012%202zm-2%2014c-.55%200-1-.45-1-1V9c0-.55.45-1%201-1s1%20.45%201%201v6c0%20.55-.45%201-1%201zm4%200c-.55%200-1-.45-1-1V9c0-.55.45-1%201-1s1%20.45%201%201v6c0%20.55-.45%201-1%201z%22%2F%3E%3C%2Fsvg%3E');
-}
-
-#AutoPlay{
-	margin-left: 8px;
-}
-
-#Speed{
-	margin-left: 0px;
-}
-
 a{
 	color: rgba(255,255,255,1);
 	text-decoration: underline;
@@ -144,6 +96,55 @@ a:hover{
 	background-size: contain;
 	background-repeat: no-repeat;
 	background-image: url('data:image/svg+xml;charset=utf8,%3Csvg%20fill%3D%22white%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%2224px%22%20height%3D%2224px%22%3E%3Cpath%20d%3D%22M%203%203%20L%203%2021%20L%2021%2021%20L%2021%2012%20L%2019%2012%20L%2019%2019%20L%205%2019%20L%205%205%20L%2012%205%20L%2012%203%20L%203%203%20z%20M%2014%203%20L%2014%205%20L%2017.585938%205%20L%208.2929688%2014.292969%20L%209.7070312%2015.707031%20L%2019%206.4140625%20L%2019%2010%20L%2021%2010%20L%2021%203%20L%2014%203%20z%22%2F%3E%3C%2Fsvg%3E');
+}
+
+.Play{
+	background-image: url('data:image/svg+xml;charset=utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22white%22%20width%3D%2218px%22%20height%3D%2218px%22%3E%3Cpath%20d%3D%22M12%202C6.48%202%202%206.48%202%2012s4.48%2010%2010%2010%2010-4.48%2010-10S17.52%202%2012%202zm-2%2013.5v-7c0-.41.47-.65.8-.4l4.67%203.5c.27.2.27.6%200%20.8l-4.67%203.5c-.33.25-.8.01-.8-.4z%22%2F%3E%3C%2Fsvg%3E');
+}
+
+.Pause{
+	background-image: url('data:image/svg+xml;charset=utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22white%22%20width%3D%2218px%22%20height%3D%2218px%22%3E%3Cpath%20d%3D%22M12%202C6.48%202%202%206.48%202%2012s4.48%2010%2010%2010%2010-4.48%2010-10S17.52%202%2012%202zm-2%2014c-.55%200-1-.45-1-1V9c0-.55.45-1%201-1s1%20.45%201%201v6c0%20.55-.45%201-1%201zm4%200c-.55%200-1-.45-1-1V9c0-.55.45-1%201-1s1%20.45%201%201v6c0%20.55-.45%201-1%201z%22%2F%3E%3C%2Fsvg%3E');
+}
+
+#Container{
+	padding: 12px 10px 20px;
+}
+
+#Area, #Type, #Date{
+	margin-left: 72px;
+}
+
+.Option div, .Option p, #Date, #Control, #Link, #Link p{
+	display: inline;
+}
+
+.Option{
+	margin: 12px 0px;
+}
+
+
+#Date p{
+	margin-right: 4px;
+}
+
+#Button{
+	margin-left: 8px;
+}
+
+#Button p{
+	margin: 0px;
+}
+
+#PrevButton{
+	transform: scale(-1, 1);
+}
+
+#AutoPlay{
+	margin-left: 8px;
+}
+
+#Speed{
+	margin-left: 0px;
 }
 
 #Image, #GpvImage, #GpvImage div{
@@ -191,13 +192,16 @@ a:hover{
  * for Smartphone
  */
 @media only screen and (max-width: 800px) {
+body{
+	width: 800px;
+}
+
 h2, h3{
 	display: none;
 }
 
-.Option, #Control{
+.Option, #Control, #AutoPlay{
 	display: block;
-	width: 100%;
 	margin: 36px 0px;
 }
 
