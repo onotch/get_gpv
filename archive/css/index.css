@@ -176,8 +176,9 @@ a:hover{
 }
 
 #GpvImage div{
-	background-position: left top;
+	background-position: center;
 	background-repeat: no-repeat;
+	background-size: contain;
 	animation-name: fade-in;
 	animation-timing-function: linear;
 }
@@ -211,6 +212,7 @@ h2, h3{
 
 p, label, select, button{
 	font-size: 36pt;
+	line-height: 140%;
 }
 
 label{
