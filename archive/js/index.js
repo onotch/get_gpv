@@ -9,6 +9,9 @@ $(document).ready(function() {
 
 	const MONTH_NAME_ARRAY = new Array('JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC');
 
+	const QUERY_KEY_AREA  = 'area';
+	const QUERY_KEY_TYPE  = 'type';
+
 	const AUTO_PLAY_STATUS = {
 		STOP : 0,
 		PLAY : 1,
@@ -43,6 +46,7 @@ $(document).ready(function() {
 	//
 	// initialize
 	//
+	initAreaAndTypeOptions();
 	initYearOptions();
 	initDayOptions((new Date()).getFullYear(), (new Date()).getMonth() + 1);
 	initDateSelect();
@@ -145,7 +149,10 @@ $(document).ready(function() {
 	});
 
 	$(ELEM_NAME_RELOAD_BUTTON).click(function() {
-		window.location.reload();
+		const href = './index.html?'
+			+ QUERY_KEY_AREA + '=' + $(ELEM_NAME_INPUT_AREA + ':checked').val() + '&'
+			+ QUERY_KEY_TYPE + '=' + $(ELEM_NAME_INPUT_TYPE + ':checked').val();
+		window.location.href = href;
 	});
 
 	$(ELEM_NAME_INPUT_AUTO_PLAY).change(function() {
@@ -288,6 +295,18 @@ $(document).ready(function() {
 		}
 		$(ELEM_NAME_SELECT_YEAR).val(newElement.val());
 		return true;
+	}
+
+	function initAreaAndTypeOptions() {
+		const area = getParameterByName(QUERY_KEY_AREA);
+		const type = getParameterByName(QUERY_KEY_TYPE);
+
+		if (($.type(area) === 'string') && area.length > 0) {
+			$(ELEM_NAME_INPUT_AREA).val([area]);
+		}
+		if (($.type(type) === 'string') && type.length > 0) {
+			$(ELEM_NAME_INPUT_TYPE).val([type]);
+		}
 	}
 
 	function initYearOptions() {
@@ -459,6 +478,15 @@ $(document).ready(function() {
 		$(ELEM_NAME_PREV_BUTTON).addClass(CLASS_NAME_PLAY);
 		$(ELEM_NAME_NEXT_BUTTON).removeClass(CLASS_NAME_PAUSE);
 		$(ELEM_NAME_NEXT_BUTTON).addClass(CLASS_NAME_PLAY);
+	}
+
+	function getParameterByName(name, url = window.location.href) {
+		name = name.replace(/[\[\]]/g, '\\$&');
+		var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+		var results = regex.exec(url);
+		if (!results) return null;
+		if (!results[2]) return '';
+		return decodeURIComponent(results[2].replace(/\+/g, ' '));
 	}
 
 	function toDoubleDigits(n) {
