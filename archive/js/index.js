@@ -392,7 +392,7 @@ $(document).ready(function() {
 				+ 'msm_' + type + '_' + area + '_' + year + month + day + hour + '.png';
 		}
 
-		console.log(path);
+		//console.log(path);
 		return path;
 	}
 
