@@ -4,7 +4,7 @@ GPV気象予報の過去の予想図をローカルにアーカイブするス�
 
 ## 動作確認済み環境
 - MacOS 10.14.6
-- Ubuntu 14.04 LTS
+- Ubuntu 16.04 LTS
 
 ## インストール方法
 ### 1. gdateコマンドを使うためbrewとcoreutilsをインストールする（MacOSのみ）
