@@ -11,6 +11,10 @@ $(document).ready(function() {
 
 	const QUERY_KEY_AREA  = 'area';
 	const QUERY_KEY_TYPE  = 'type';
+	const QUERY_KEY_YEAR  = 'y';
+	const QUERY_KEY_MONTH = 'm';
+	const QUERY_KEY_DAY   = 'd';
+	const QUERY_KEY_HOUR  = 'h';
 
 	const AUTO_PLAY_STATUS = {
 		STOP : 0,
@@ -49,9 +53,14 @@ $(document).ready(function() {
 	initAreaAndTypeOptions();
 	initYearOptions();
 	initDayOptions((new Date()).getFullYear(), (new Date()).getMonth() + 1);
-	initDateSelect();
+	initDateSelect(
+		parseInt(getParameterByName(QUERY_KEY_YEAR)),
+		parseInt(getParameterByName(QUERY_KEY_MONTH)),
+		parseInt(getParameterByName(QUERY_KEY_DAY)),
+		parseInt(getParameterByName(QUERY_KEY_HOUR)));
 	resetGpvImage();
 	//resetGpvFrame();
+	resetUrl();
 
 	//
 	// events
@@ -79,17 +88,20 @@ $(document).ready(function() {
 		stopAutoPlay();
 		resetGpvImage();
 		//resetGpvFrame();
+		resetUrl();
 	});
 
 	$(ELEM_NAME_INPUT_TYPE).change(function() {
 		stopAutoPlay();
 		resetGpvImage();
 		//resetGpvFrame();
+		resetUrl();
 	});
 
 	$(ELEM_NAME_SELECT_YEAR).change(function() {
 		stopAutoPlay();
 		resetGpvImage();
+		resetUrl();
 	});
 
 	$(ELEM_NAME_SELECT_MONTH).change(function() {
@@ -98,16 +110,19 @@ $(document).ready(function() {
 		const month = $(ELEM_NAME_SELECT_MONTH + ' > option:selected').val()
 		initDayOptions(year, month);
 		resetGpvImage();
+		resetUrl();
 	});
 
 	$(ELEM_NAME_SELECT_DAY).change(function() {
 		stopAutoPlay();
 		resetGpvImage();
+		resetUrl();
 	});
 
 	$(ELEM_NAME_SELECT_HOUR).change(function() {
 		stopAutoPlay();
 		resetGpvImage();
+		resetUrl();
 	});
 
 	$(ELEM_NAME_PREV_BUTTON).click(function() {
@@ -149,7 +164,7 @@ $(document).ready(function() {
 	});
 
 	$(ELEM_NAME_RELOAD_BUTTON).click(function() {
-		const href = './index.html?'
+		const href = './' + getFileName() + '?'
 			+ QUERY_KEY_AREA + '=' + $(ELEM_NAME_INPUT_AREA + ':checked').val() + '&'
 			+ QUERY_KEY_TYPE + '=' + $(ELEM_NAME_INPUT_TYPE + ':checked').val();
 		window.location.href = href;
@@ -197,6 +212,7 @@ $(document).ready(function() {
 		}
 		$(ELEM_NAME_SELECT_HOUR).val(newElement.val());
 		resetGpvImage();
+		resetUrl();
 	}
 
 	function nextHour() {
@@ -215,6 +231,7 @@ $(document).ready(function() {
 		}
 		$(ELEM_NAME_SELECT_HOUR).val(newElement.val());
 		resetGpvImage();
+		resetUrl();
 	}
 
 	function prevDay() {
@@ -340,7 +357,7 @@ $(document).ready(function() {
 		}
 	}
 
-	function initDateSelect() {
+	function initDateSelect(year, month, day, hour) {
 		var now = new Date();
 		/*
 		var hour_delta = now.getHours() % 3 + 1;
@@ -349,10 +366,10 @@ $(document).ready(function() {
 		}
 		now.setHours(now.getHours() - hour_delta);
 		*/
-		const year = now.getFullYear();
-		const month = now.getMonth() + 1;
-		const day = now.getDate();
-		const hour = now.getHours();
+		if (!Number.isInteger(year))  year = now.getFullYear();
+		if (!Number.isInteger(month)) month = now.getMonth() + 1;
+		if (!Number.isInteger(day))   day = now.getDate();
+		if (!Number.isInteger(hour))  hour = now.getHours();
 		$(ELEM_NAME_SELECT_YEAR).val(year);
 		$(ELEM_NAME_SELECT_MONTH).val(month);
 		$(ELEM_NAME_SELECT_DAY).val(day);
@@ -397,15 +414,15 @@ $(document).ready(function() {
 			now.setHours(now.getHours() + hour_delta);
 			year = now.getUTCFullYear();
 			month = MONTH_NAME_ARRAY[now.getUTCMonth()];
-			day = toDoubleDigits(now.getUTCDate());
-			hour = toDoubleDigits(now.getUTCHours());
+			day = getDoubleDigits(now.getUTCDate());
+			hour = getDoubleDigits(now.getUTCHours());
 
 			path = GPV_URL + 'msm/msm_' + type + '_' + area + '_'
 				+ index + '.' + hour + 'Z' + day + month + year + '.png';
 		} else {
-			month = toDoubleDigits(month);
-			day = toDoubleDigits(day);
-			hour = toDoubleDigits(hour);
+			month = getDoubleDigits(month);
+			day = getDoubleDigits(day);
+			hour = getDoubleDigits(hour);
 
 			path = 'images/' + type + '/' + area + '/' + year + '/' + month + '/' + day + '/'
 				+ 'msm_' + type + '_' + area + '_' + year + month + day + hour + '.png';
@@ -426,9 +443,9 @@ $(document).ready(function() {
 		}
 		now.setHours(now.getHours() - hour_delta);
 		const year = now.getFullYear();
-		const month = toDoubleDigits(now.getMonth() + 1);
-		const day = toDoubleDigits(now.getDate());
-		const hour = toDoubleDigits(now.getHours());
+		const month = getDoubleDigits(now.getMonth() + 1);
+		const day = getDoubleDigits(now.getDate());
+		const hour = getDoubleDigits(now.getHours());
 
 		const url = GPV_URL + 'msm_' + type + '_' + area + '_' + year + month + day + hour + '.html';
 		//console.log(url);
@@ -489,12 +506,25 @@ $(document).ready(function() {
 		return decodeURIComponent(results[2].replace(/\+/g, ' '));
 	}
 
-	function toDoubleDigits(n) {
-		n += '';
-		if (n.length === 1) {
-			n = "0" + n;
-		}
-		return n;
+	function resetUrl() {
+		const area = $(ELEM_NAME_INPUT_AREA + ':checked').val();
+		const type = $(ELEM_NAME_INPUT_TYPE + ':checked').val();
+		const year = $(ELEM_NAME_SELECT_YEAR).val();
+		const month = $(ELEM_NAME_SELECT_MONTH).val();
+		const day = $(ELEM_NAME_SELECT_DAY).val();
+		const hour = $(ELEM_NAME_SELECT_HOUR).val();
+		const url = getFileName() + '?' + QUERY_KEY_AREA + '=' + area + '&' + QUERY_KEY_TYPE + '=' + type + '&'
+			+ QUERY_KEY_YEAR + '=' + year + '&' + QUERY_KEY_MONTH + '=' + month + '&'
+			+ QUERY_KEY_DAY + '=' + day + '&' + QUERY_KEY_HOUR + '=' + hour;
+		history.replaceState('', '', url);
+	}
+
+	function getFileName(url = window.location.href) {
+		return url.split('/').pop().split('?').shift();
+	}
+
+	function getDoubleDigits(n) {
+		return (n.toString().length === 1) ? ('0' + n) : n;
 	}
 
 });
