@@ -422,7 +422,7 @@ $(document).ready(function() {
 			return;
 		}
 
-		$('#Container').css('width', width + 'px');
+		$('body').css('width', width + 'px');
 		$(ELEM_NAME_OPTION).css('width', width + 'px');
 		$(ELEM_NAME_IMAGE).css({width: width + 'px', height: height + 'px'});
 		$(ELEM_NAME_GPV_IMAGE).css({width: width + 'px', height: height + 'px'});
