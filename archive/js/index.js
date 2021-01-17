@@ -416,7 +416,7 @@ $(document).ready(function() {
 	function initElementSize() {
 		const width = window.innerWidth;
 		const height = Math.round((width / GPV_IMAGE_WIDTH) * GPV_IMAGE_HEIGHT);
-		console.log('width=' + width + ', height=' + height);
+		//console.log('width=' + width + ', height=' + height);
 
 		if (width >= GPV_IMAGE_WIDTH) {
 			return;
