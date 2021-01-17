@@ -6,6 +6,8 @@ $(document).ready(function() {
 	const GPV_UPDATE_MIN         = 30;
 
 	const GPV_URL = 'http://weather-gpv.info/';
+	const GPV_IMAGE_WIDTH  = 800;
+	const GPV_IMAGE_HEIGHT = 600;
 
 	const MONTH_NAME_ARRAY = new Array('JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC');
 
@@ -25,6 +27,8 @@ $(document).ready(function() {
 	const ANIMATION_DURATION_MANUAL = 100;
 	const ANIMATION_DURATION_AUTO   = 200;
 
+	const TOUCH_MOVE_THRESHOLD = 25;
+
 	const KEY_CODE_LEFT  = 37;
 	const KEY_CODE_RIGHT = 39;
 
@@ -36,20 +40,31 @@ $(document).ready(function() {
 	const ELEM_NAME_SELECT_HOUR     = 'select[name=hour]';
 	const ELEM_NAME_INPUT_AUTO_PLAY = 'input[name=autoplay]';
 	const ELEM_NAME_SELECT_SPEED    = 'select[name=speed]';
+	const ELEM_NAME_OPTION          = '.Option';
 	const ELEM_NAME_PREV_BUTTON     = '#PrevButton';
 	const ELEM_NAME_NEXT_BUTTON     = '#NextButton';
 	const ELEM_NAME_RELOAD_BUTTON   = '#ReloadButton';
+	const ELEM_NAME_IMAGE           = '#Image';
 	const ELEM_NAME_GPV_IMAGE       = '#GpvImage';
 	const ELEM_NAME_GPV_FRAME       = '#GpvFrame > iframe';
+	const ELEM_NAME_TOUCH_AREA      = '#TouchArea';
 	const CLASS_NAME_PLAY           = 'Play';
 	const CLASS_NAME_PAUSE          = 'Pause';
 
 	var autoPlayTimer = null;
 	var autoPlayStatus = AUTO_PLAY_STATUS.STOP;
 
+	var touchStartX = null;
+	var touchStartY = null;
+	var touchPrevX = null;
+	var touchPrevY = null;
+	var isTouching = false;
+	var isTouchMoved = false;
+
 	//
 	// initialize
 	//
+	initElementSize();
 	initAreaAndTypeOptions();
 	initYearOptions();
 	initDayOptions((new Date()).getFullYear(), (new Date()).getMonth() + 1);
@@ -63,7 +78,88 @@ $(document).ready(function() {
 	resetUrl();
 
 	//
-	// events
+	// mouse events
+	//
+	$(ELEM_NAME_TOUCH_AREA).mousedown(function(event) {
+		event.preventDefault();
+		touch(event.clientX, event.clientY);
+	}).mousemove(function(event) {
+		event.preventDefault();
+		move(event.clientX, event.clientY);
+	}).mouseup(function(event) {
+		event.preventDefault();
+		release(event.clientX, event.clientY);
+	});
+
+	//
+	// touch events
+	//
+	$(ELEM_NAME_TOUCH_AREA).bind('touchstart', function(event) {
+		event.preventDefault();
+		touch(event.originalEvent.changedTouches[0].clientX, event.originalEvent.changedTouches[0].clientY);
+	}).bind('touchmove', function(event) {
+		event.preventDefault();
+		move(event.originalEvent.changedTouches[0].clientX, event.originalEvent.changedTouches[0].clientY);
+	}).bind('touchend', function(event) {
+		event.preventDefault();
+		release(event.originalEvent.changedTouches[0].clientX, event.originalEvent.changedTouches[0].clientY);
+	}).bind('touchcancel', function(event) {
+		event.preventDefault();
+		release(event.originalEvent.changedTouches[0].clientX, event.originalEvent.changedTouches[0].clientY);
+	});
+
+	function touch(x, y) {
+		touchStartX = x;
+		touchStartY = y;
+		touchPrevX = x;
+		touchPrevY = y;
+		isTouching = true;
+		isTouchMoved = false;
+	}
+
+	function move(x, y) {
+		if (!isTouching) return;
+		const deltaX =  x - touchPrevX;
+		const deltaY =  y - touchPrevY;
+		//console.log('move: x=' + x + ', y=' + y + ', deltaX=' + deltaX + ', deltaY=' + deltaY);
+
+		if (Math.abs(deltaX) > TOUCH_MOVE_THRESHOLD) {
+			// move horizontal
+			if (autoPlayStatus !== AUTO_PLAY_STATUS.STOP) {
+				stopAutoPlay();
+			}
+			if (deltaX < 0) {
+				prevHour();
+			} else {
+				nextHour();
+			}
+			touchPrevX = x;
+			touchPrevY = y;
+			isTouchMoved = true;
+		} else if (Math.abs(deltaY) > TOUCH_MOVE_THRESHOLD) {
+			// move vertical
+			touchPrevX = x;
+			touchPrevY = y;
+			isTouchMoved = true;
+		}
+	}
+
+	function release(x, y) {
+		if (!isTouching) return;
+		cancel();
+	}
+
+	function cancel() {
+		touchStartX = null;
+		touchStartY = null;
+		touchPrevX = null;
+		touchPrevY = null;
+		isTouching = false;
+		isTouchMoved = false;
+	}
+
+	//
+	// key events
 	//
 	$(this).keydown(function(event) {
 		switch (event.keyCode) {
@@ -84,6 +180,9 @@ $(document).ready(function() {
 		}
 	});
 
+	//
+	// gui events
+	//
 	$(ELEM_NAME_INPUT_AREA).change(function() {
 		stopAutoPlay();
 		resetGpvImage();
@@ -314,6 +413,23 @@ $(document).ready(function() {
 		return true;
 	}
 
+	function initElementSize() {
+		const width = window.innerWidth;
+		const height = Math.round((width / GPV_IMAGE_WIDTH) * GPV_IMAGE_HEIGHT);
+		console.log('width=' + width + ', height=' + height);
+
+		if (width >= GPV_IMAGE_WIDTH) {
+			return;
+		}
+
+		$('#Container').css('width', width + 'px');
+		$(ELEM_NAME_OPTION).css('width', width + 'px');
+		$(ELEM_NAME_IMAGE).css({width: width + 'px', height: height + 'px'});
+		$(ELEM_NAME_GPV_IMAGE).css({width: width + 'px', height: height + 'px'});
+		$(ELEM_NAME_GPV_IMAGE + ' div').css({width: width + 'px', height: height + 'px'});
+		$(ELEM_NAME_TOUCH_AREA).css({width: width + 'px', height: height + 'px'});
+	}
+
 	function initAreaAndTypeOptions() {
 		const area = getParameterByName(QUERY_KEY_AREA);
 		const type = getParameterByName(QUERY_KEY_TYPE);
@@ -524,7 +640,7 @@ $(document).ready(function() {
 	}
 
 	function getDoubleDigits(n) {
-		return (n.toString().length === 1) ? ('0' + n) : n;
+		return (n.toString().length === 1) ? ('0' + n) : n.toString();
 	}
 
 });

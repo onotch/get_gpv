@@ -127,7 +127,6 @@ a:hover{
 	margin: 12px 0px;
 }
 
-
 #Date p{
 	margin-right: 4px;
 }
@@ -152,8 +151,9 @@ a:hover{
 	margin-left: 0px;
 }
 
-#Image, #GpvImage, #GpvImage div{
-	width: 800px;
+#Image, #GpvImage, #GpvImage div, #TouchArea{
+	width: 100%;
+	max-width: 800px;
 	height: 600px;
 }
 
@@ -174,14 +174,14 @@ a:hover{
 	transform: translate(-50%, -50%);
 }
 
-#GpvImage, #GpvImage div{
+#GpvImage, #GpvImage div, #TouchArea{
 	position: absolute;
 	top: 0px;
 	left: 0px;
 }
 
 #GpvImage div{
-	background-position: center;
+	background-position: left top;
 	background-repeat: no-repeat;
 	background-size: contain;
 	animation-name: fade-in;
@@ -211,13 +211,24 @@ h2, h3{
 	margin: 36px 0px;
 }
 
+#Container{
+	padding-top: 0px;
+}
+
 #Area, #Type, #Date{
 	margin-left: 0px;
 }
 
 p, label, select, button, li{
-	font-size: 36pt;
 	line-height: 140%;
+}
+
+p, label, select, button{
+	font-size: 20pt;
+}
+
+li{
+	font-size: 16pt;
 }
 
 label{
@@ -225,8 +236,8 @@ label{
 }
 
 button{
-	width: 144px;
-	height: 144px;
+	width: 120px;
+	height: 120px;
 	vertical-align: -55%;
 }
 
@@ -234,20 +245,35 @@ button:first-child{
 	margin-right: 12px;
 }
 
+.External{
+	padding-right: 20pt;
+}
+
+#Date{
+	display: block;
+	text-align: center;
+}
+
 #Date p{
 	margin-right: 0px;
 }
 
 #Button{
+	display: block;
 	margin-left: 0px;
+	text-align: center;
 }
 
 #AutoPlay{
-	margin-left: 24px;
+	display: none;
 }
 
 #Image{
 	margin-top: 36px;
+}
+
+#NoImage{
+	font-size: 12pt;
 }
 }
 
