@@ -76,6 +76,10 @@ button:hover{
 	opacity: 1;
 }
 
+ul{
+	padding-inline-start: 12pt;
+}
+
 li{
 	color: rgba(255,255,255,0.8);
 	line-height: 160%;
@@ -89,6 +93,11 @@ a{
 
 a:hover{
 	opacity: 1;
+}
+
+.Divider{
+	margin: 0pt 12pt;
+	font-weight: normal;
 }
 
 .External{
@@ -112,14 +121,18 @@ a:hover{
 }
 
 #Container{
-	padding: 12px 10px 20px;
+	padding: 12px;
 }
 
-#Area, #Type, #Date{
-	margin-left: 72px;
+#Area, #Type, #Link{
+	padding: 0px 72px;
 }
 
-.Option div, .Option p, #Date, #Control, #Link, #Link p{
+#Date{
+	padding-left: 72px;
+}
+
+.Option div, .Option p, #Date, #Control{
 	display: inline;
 }
 
@@ -159,7 +172,7 @@ a:hover{
 
 #Image{
 	position: relative;
-	margin-top: 12px;
+	margin: 12px 0px 4px;
 	text-align: center;
 	background-color: rgba(255,255,255,0.1);
 }
@@ -202,7 +215,16 @@ body{
 	width: 800px;
 }
 
-h2, h3{
+h2{
+	margin: 12px 12px 12px;
+	font-size: 24pt;
+}
+
+h2:first-child{
+	padding-left: 30pt;
+}
+
+h3{
 	display: none;
 }
 
@@ -212,11 +234,11 @@ h2, h3{
 }
 
 #Container{
-	padding-top: 0px;
+	padding: 0px;
 }
 
-#Area, #Type, #Date{
-	margin-left: 0px;
+#Area, #Type, #Date, #Link{
+	padding: 0px 16px;
 }
 
 p, label, select, button, li{
@@ -239,10 +261,6 @@ button{
 	width: 120px;
 	height: 120px;
 	vertical-align: -55%;
-}
-
-button:first-child{
-	margin-right: 12px;
 }
 
 .External{
@@ -269,7 +287,7 @@ button:first-child{
 }
 
 #Image{
-	margin-top: 36px;
+	margin: 12px 0px 0px;
 }
 
 #NoImage{

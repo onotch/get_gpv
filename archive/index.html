@@ -23,31 +23,12 @@
 	<div id="Container">
 		<h2>GPV Archive</h2>
 
-		<div id="Area" class="Option">
-			<h3>地域</h3>
-			<div>
-				<label><input type="radio" name="area" value="dh" />道北</label>
-				<label><input type="radio" name="area" value="dn" />道南</label>
-				<label><input type="radio" name="area" value="kh" />北東北</label>
-				<label><input type="radio" name="area" value="mh" />南東北</label>
-				<label><input type="radio" name="area" value="kt" checked="checked" />関東</label>
-				<label><input type="radio" name="area" value="cb" />中部</label>
-				<label><input type="radio" name="area" value="kk" />近畿</label>
-				<label><input type="radio" name="area" value="cs" />中四国</label>
-				<label><input type="radio" name="area" value="ks" />九州</label>
-				<label><input type="radio" name="area" value="on" />沖縄</label>
-				<label><input type="radio" name="area" value="to" />奄美</label>
-				<label><input type="radio" name="area" value="is" />伊豆諸島</label>
+		<div id="Image">
+			<p id="NoImage">NO IMAGE</p>
+			<div id="GpvImage">
+				<div></div>
 			</div>
-		</div>
-
-		<div id="Type" class="Option">
-			<h3>種別</h3>
-			<div>
-				<label><input type="radio" name="type" value="cp" checked="checked" />雨量・雲量</label>
-				<label><input type="radio" name="type" value="wa" />気圧・風速</label>
-				<label><input type="radio" name="type" value="th" />気温・湿度</label>
-			</div>
+			<div id="TouchArea"></div>
 		</div>
 
 		<div id="Date" class="Option">
@@ -128,13 +109,33 @@
 			</div>
 		</div>
 
-		<div id="Image">
-			<p id="NoImage">NO IMAGE</p>
-			<div id="GpvImage">
-				<div></div>
+		<div id="Area" class="Option">
+			<h3>地域</h3>
+			<div>
+				<label><input type="radio" name="area" value="dh" />道北</label>
+				<label><input type="radio" name="area" value="dn" />道南</label>
+				<label><input type="radio" name="area" value="kh" />北東北</label>
+				<label><input type="radio" name="area" value="mh" />南東北</label>
+				<label><input type="radio" name="area" value="kt" checked="checked" />関東</label>
+				<label><input type="radio" name="area" value="cb" />中部</label>
+				<label><input type="radio" name="area" value="kk" />近畿</label>
+				<label><input type="radio" name="area" value="cs" />中四国</label>
+				<label><input type="radio" name="area" value="ks" />九州</label>
+				<label><input type="radio" name="area" value="on" />沖縄</label>
+				<label><input type="radio" name="area" value="to" />奄美</label>
+				<label><input type="radio" name="area" value="is" />伊豆諸島</label>
 			</div>
-			<div id="TouchArea"></div>
 		</div>
+
+		<div id="Type" class="Option">
+			<h3>種別</h3>
+			<div>
+				<label><input type="radio" name="type" value="cp" checked="checked" />雨量・雲量</label>
+				<label><input type="radio" name="type" value="wa" />気圧・風速</label>
+				<label><input type="radio" name="type" value="th" />気温・湿度</label>
+			</div>
+		</div>
+
 <!--
 		<h2><a class="External" href="http://weather-gpv.info/" target="_blank">GPV気象予報</a></h2>
 		<div id="GpvFrame">
@@ -145,6 +146,7 @@
 		<div id="Link">
 			<ul>
 				<li><a class="External" href="http://weather-gpv.info/" target="_blank">GPV 気象予報</a></li>
+			</ul>
 		</div>
 	</div>
 </body>
