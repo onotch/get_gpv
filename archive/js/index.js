@@ -1,296 +1,68 @@
-$(document).ready(function() {
-	'use strict';
+'use strict';
 
-	const START_YEAR             = 2021;
-	const JOB_SCHEDULED_TIME_MIN = 40;
-	const GPV_UPDATE_MIN         = 30;
+const START_YEAR             = 2021;
+const JOB_SCHEDULED_TIME_MIN = 40;
+const GPV_UPDATE_MIN         = 30;
 
-	const GPV_URL = 'http://weather-gpv.info/';
-	const GPV_IMAGE_WIDTH  = 800;
-	const GPV_IMAGE_HEIGHT = 600;
+const GPV_URL = 'http://weather-gpv.info/';
+const GPV_IMAGE_WIDTH  = 800;
+const GPV_IMAGE_HEIGHT = 600;
 
-	const MONTH_NAME_ARRAY = new Array('JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC');
+const MONTH_NAME_ARRAY = new Array('JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC');
 
-	const QUERY_KEY_AREA  = 'area';
-	const QUERY_KEY_TYPE  = 'type';
-	const QUERY_KEY_YEAR  = 'y';
-	const QUERY_KEY_MONTH = 'm';
-	const QUERY_KEY_DAY   = 'd';
-	const QUERY_KEY_HOUR  = 'h';
+const QUERY_KEY_AREA  = 'area';
+const QUERY_KEY_TYPE  = 'type';
+const QUERY_KEY_YEAR  = 'y';
+const QUERY_KEY_MONTH = 'm';
+const QUERY_KEY_DAY   = 'd';
+const QUERY_KEY_HOUR  = 'h';
 
-	const AUTO_PLAY_STATUS = {
-		STOP : 0,
-		PLAY : 1,
-		REVERSE : 2
-	};
+const AUTO_PLAY_STATUS = {
+	STOP : 0,
+	PLAY : 1,
+	REVERSE : 2
+};
 
-	const ANIMATION_DURATION_MANUAL = 100;
-	const ANIMATION_DURATION_AUTO   = 200;
+const ANIMATION_DURATION_MANUAL = 100;
+const ANIMATION_DURATION_AUTO   = 200;
 
-	const TOUCH_MOVE_THRESHOLD = 25;
+const TOUCH_MOVE_THRESHOLD       = 25;
+const WHEEL_ACTION_DECIMATE_TIME = 75;
 
-	const KEY_CODE_LEFT  = 37;
-	const KEY_CODE_RIGHT = 39;
+const KEY_CODE_LEFT  = 37;
+const KEY_CODE_RIGHT = 39;
 
-	const ELEM_NAME_INPUT_AREA      = 'input[name=area]';
-	const ELEM_NAME_INPUT_TYPE      = 'input[name=type]';
-	const ELEM_NAME_SELECT_YEAR     = 'select[name=year]';
-	const ELEM_NAME_SELECT_MONTH    = 'select[name=month]';
-	const ELEM_NAME_SELECT_DAY      = 'select[name=day]';
-	const ELEM_NAME_SELECT_HOUR     = 'select[name=hour]';
-	const ELEM_NAME_INPUT_AUTO_PLAY = 'input[name=autoplay]';
-	const ELEM_NAME_SELECT_SPEED    = 'select[name=speed]';
-	const ELEM_NAME_OPTION          = '.Option';
-	const ELEM_NAME_PREV_BUTTON     = '#PrevButton';
-	const ELEM_NAME_NEXT_BUTTON     = '#NextButton';
-	const ELEM_NAME_RELOAD_BUTTON   = '#ReloadButton';
-	const ELEM_NAME_IMAGE           = '#Image';
-	const ELEM_NAME_GPV_IMAGE       = '#GpvImage';
-	const ELEM_NAME_GPV_FRAME       = '#GpvFrame > iframe';
-	const ELEM_NAME_TOUCH_AREA      = '#TouchArea';
-	const CLASS_NAME_PLAY           = 'Play';
-	const CLASS_NAME_PAUSE          = 'Pause';
+const ELEM_NAME_INPUT_AREA      = 'input[name=area]';
+const ELEM_NAME_INPUT_TYPE      = 'input[name=type]';
+const ELEM_NAME_SELECT_YEAR     = 'select[name=year]';
+const ELEM_NAME_SELECT_MONTH    = 'select[name=month]';
+const ELEM_NAME_SELECT_DAY      = 'select[name=day]';
+const ELEM_NAME_SELECT_HOUR     = 'select[name=hour]';
+const ELEM_NAME_INPUT_AUTO_PLAY = 'input[name=autoplay]';
+const ELEM_NAME_SELECT_SPEED    = 'select[name=speed]';
+const ELEM_NAME_OPTION          = '.Option';
+const ELEM_NAME_PREV_BUTTON     = '#PrevButton';
+const ELEM_NAME_NEXT_BUTTON     = '#NextButton';
+const ELEM_NAME_RELOAD_BUTTON   = '#ReloadButton';
+const ELEM_NAME_IMAGE           = '#Image';
+const ELEM_NAME_GPV_IMAGE       = '#GpvImage';
+const ELEM_NAME_GPV_FRAME       = '#GpvFrame > iframe';
+const ELEM_NAME_TOUCH_AREA      = '#TouchArea';
+const CLASS_NAME_PLAY           = 'Play';
+const CLASS_NAME_PAUSE          = 'Pause';
 
-	var autoPlayTimer = null;
-	var autoPlayStatus = AUTO_PLAY_STATUS.STOP;
+var autoPlayTimer = null;
+var autoPlayStatus = AUTO_PLAY_STATUS.STOP;
 
-	var touchStartX = null;
-	var touchStartY = null;
-	var touchPrevX = null;
-	var touchPrevY = null;
-	var isTouching = false;
-	var isTouchMoved = false;
+var touchStartX = null;
+var touchStartY = null;
+var touchPrevX = null;
+var touchPrevY = null;
+var isTouching = false;
+var isTouchMoved = false;
 
-	//
-	// initialize
-	//
-	initElementSize();
-	initAreaAndTypeOptions();
-	initYearOptions();
-	initDayOptions((new Date()).getFullYear(), (new Date()).getMonth() + 1);
-	initDateSelect(
-		parseInt(getParameterByName(QUERY_KEY_YEAR)),
-		parseInt(getParameterByName(QUERY_KEY_MONTH)),
-		parseInt(getParameterByName(QUERY_KEY_DAY)),
-		parseInt(getParameterByName(QUERY_KEY_HOUR)));
-	resetGpvImage();
-	//resetGpvFrame();
-	resetUrl();
+var wheelLastActTime = new Date();
 
-	//
-	// mouse events
-	//
-	$(ELEM_NAME_TOUCH_AREA).mousedown(function(event) {
-		event.preventDefault();
-		touch(event.clientX, event.clientY);
-	}).mousemove(function(event) {
-		event.preventDefault();
-		move(event.clientX, event.clientY);
-	}).mouseup(function(event) {
-		event.preventDefault();
-		release(event.clientX, event.clientY);
-	});
-
-	//
-	// touch events
-	//
-	$(ELEM_NAME_TOUCH_AREA).bind('touchstart', function(event) {
-		event.preventDefault();
-		touch(event.originalEvent.changedTouches[0].clientX, event.originalEvent.changedTouches[0].clientY);
-	}).bind('touchmove', function(event) {
-		event.preventDefault();
-		move(event.originalEvent.changedTouches[0].clientX, event.originalEvent.changedTouches[0].clientY);
-	}).bind('touchend', function(event) {
-		event.preventDefault();
-		release(event.originalEvent.changedTouches[0].clientX, event.originalEvent.changedTouches[0].clientY);
-	}).bind('touchcancel', function(event) {
-		event.preventDefault();
-		release(event.originalEvent.changedTouches[0].clientX, event.originalEvent.changedTouches[0].clientY);
-	});
-
-	function touch(x, y) {
-		touchStartX = x;
-		touchStartY = y;
-		touchPrevX = x;
-		touchPrevY = y;
-		isTouching = true;
-		isTouchMoved = false;
-	}
-
-	function move(x, y) {
-		if (!isTouching) return;
-		const deltaX =  x - touchPrevX;
-		const deltaY =  y - touchPrevY;
-		//console.log('move: x=' + x + ', y=' + y + ', deltaX=' + deltaX + ', deltaY=' + deltaY);
-
-		if (Math.abs(deltaX) > TOUCH_MOVE_THRESHOLD) {
-			// move horizontal
-			if (autoPlayStatus !== AUTO_PLAY_STATUS.STOP) {
-				stopAutoPlay();
-			}
-			if (deltaX < 0) {
-				prevHour();
-			} else {
-				nextHour();
-			}
-			touchPrevX = x;
-			touchPrevY = y;
-			isTouchMoved = true;
-		} else if (Math.abs(deltaY) > TOUCH_MOVE_THRESHOLD) {
-			// move vertical
-			touchPrevX = x;
-			touchPrevY = y;
-			isTouchMoved = true;
-		}
-	}
-
-	function release(x, y) {
-		if (!isTouching) return;
-		cancel();
-	}
-
-	function cancel() {
-		touchStartX = null;
-		touchStartY = null;
-		touchPrevX = null;
-		touchPrevY = null;
-		isTouching = false;
-		isTouchMoved = false;
-	}
-
-	//
-	// key events
-	//
-	$(this).keydown(function(event) {
-		switch (event.keyCode) {
-			case KEY_CODE_LEFT:
-				if (autoPlayStatus !== AUTO_PLAY_STATUS.STOP) {
-					stopAutoPlay();
-				}
-				prevHour();
-				break;
-			case KEY_CODE_RIGHT:
-				if (autoPlayStatus !== AUTO_PLAY_STATUS.STOP) {
-					stopAutoPlay();
-				}
-				nextHour();
-				break;
-			default:
-				break;
-		}
-	});
-
-	//
-	// gui events
-	//
-	$(ELEM_NAME_INPUT_AREA).change(function() {
-		stopAutoPlay();
-		resetGpvImage();
-		//resetGpvFrame();
-		resetUrl();
-	});
-
-	$(ELEM_NAME_INPUT_TYPE).change(function() {
-		stopAutoPlay();
-		resetGpvImage();
-		//resetGpvFrame();
-		resetUrl();
-	});
-
-	$(ELEM_NAME_SELECT_YEAR).change(function() {
-		stopAutoPlay();
-		resetGpvImage();
-		resetUrl();
-	});
-
-	$(ELEM_NAME_SELECT_MONTH).change(function() {
-		stopAutoPlay();
-		const year = $(ELEM_NAME_SELECT_YEAR + ' > option:selected').val();
-		const month = $(ELEM_NAME_SELECT_MONTH + ' > option:selected').val()
-		initDayOptions(year, month);
-		resetGpvImage();
-		resetUrl();
-	});
-
-	$(ELEM_NAME_SELECT_DAY).change(function() {
-		stopAutoPlay();
-		resetGpvImage();
-		resetUrl();
-	});
-
-	$(ELEM_NAME_SELECT_HOUR).change(function() {
-		stopAutoPlay();
-		resetGpvImage();
-		resetUrl();
-	});
-
-	$(ELEM_NAME_PREV_BUTTON).click(function() {
-		if ($(ELEM_NAME_INPUT_AUTO_PLAY).prop('checked')) {
-			switch (autoPlayStatus) {
-				case AUTO_PLAY_STATUS.STOP:
-				case AUTO_PLAY_STATUS.PLAY:
-					startAutoPlay(AUTO_PLAY_STATUS.REVERSE);
-					break;
-				case AUTO_PLAY_STATUS.REVERSE:
-					stopAutoPlay();
-					break;
-				default:
-					console.assert(false, 'autoPlayStatus=' + autoPlayStatus);
-					break;
-			}
-		} else {
-			prevHour();
-		}
-	});
-
-	$(ELEM_NAME_NEXT_BUTTON).click(function() {
-		if ($(ELEM_NAME_INPUT_AUTO_PLAY).prop('checked')) {
-			switch (autoPlayStatus) {
-				case AUTO_PLAY_STATUS.STOP:
-				case AUTO_PLAY_STATUS.REVERSE:
-					startAutoPlay(AUTO_PLAY_STATUS.PLAY);
-					break;
-				case AUTO_PLAY_STATUS.PLAY:
-					stopAutoPlay();
-					break;
-				default:
-					console.assert(false, 'autoPlayStatus=' + autoPlayStatus);
-					break;
-			}
-		} else {
-			nextHour();
-		}
-	});
-
-	$(ELEM_NAME_RELOAD_BUTTON).click(function() {
-		const href = './' + getFileName() + '?'
-			+ QUERY_KEY_AREA + '=' + $(ELEM_NAME_INPUT_AREA + ':checked').val() + '&'
-			+ QUERY_KEY_TYPE + '=' + $(ELEM_NAME_INPUT_TYPE + ':checked').val();
-		window.location.href = href;
-	});
-
-	$(ELEM_NAME_INPUT_AUTO_PLAY).change(function() {
-		// $(ELEM_NAME_SELECT_SPEED).prop('disabled', !$(this).prop('checked'));
-		stopAutoPlay();
-	});
-
-	$(ELEM_NAME_SELECT_SPEED).change(function() {
-		//console.log($(ELEM_NAME_INPUT_AUTO_PLAY).prop('checked'));
-		if ($(ELEM_NAME_INPUT_AUTO_PLAY).prop('checked')) {
-			switch (autoPlayStatus) {
-				case AUTO_PLAY_STATUS.PLAY:
-				case AUTO_PLAY_STATUS.REVERSE:
-					startAutoPlay(null);
-				case AUTO_PLAY_STATUS.STOP:
-					break;
-				default:
-					console.assert(false, 'autoPlayStatus=' + autoPlayStatus);
-					break;
-			}
-		} else {
-			$(ELEM_NAME_INPUT_AUTO_PLAY).prop('checked', true);
-		}
-	});
 
 	//
 	// functions
@@ -642,5 +414,301 @@ $(document).ready(function() {
 	function getDoubleDigits(n) {
 		return (n.toString().length === 1) ? ('0' + n) : n.toString();
 	}
+
+	function shouldActWheel() {
+		if ((new Date()).getTime() - wheelLastActTime.getTime() > WHEEL_ACTION_DECIMATE_TIME) {
+			wheelLastActTime = new Date();
+			return true;
+		}
+		return false;
+	}
+
+//
+// on document load
+//
+$(document).ready(function() {
+
+	//
+	// initialize
+	//
+	initElementSize();
+	initAreaAndTypeOptions();
+	initYearOptions();
+	initDayOptions((new Date()).getFullYear(), (new Date()).getMonth() + 1);
+	initDateSelect(
+		parseInt(getParameterByName(QUERY_KEY_YEAR)),
+		parseInt(getParameterByName(QUERY_KEY_MONTH)),
+		parseInt(getParameterByName(QUERY_KEY_DAY)),
+		parseInt(getParameterByName(QUERY_KEY_HOUR)));
+	resetGpvImage();
+	//resetGpvFrame();
+	resetUrl();
+
+	//
+	// mouse events
+	//
+	$(ELEM_NAME_TOUCH_AREA).mousedown(function(event) {
+		event.preventDefault();
+		touch(event.clientX, event.clientY);
+	}).mousemove(function(event) {
+		event.preventDefault();
+		move(event.clientX, event.clientY);
+	}).mouseup(function(event) {
+		event.preventDefault();
+		release(event.clientX, event.clientY);
+	});
+
+	$(ELEM_NAME_TOUCH_AREA).bind('wheel', function(event) {
+		event.preventDefault();
+		if (event.originalEvent.deltaY < 0 && shouldActWheel()) {
+			prevHour();
+		} else if (event.originalEvent.deltaY > 0 && shouldActWheel()) {
+			nextHour();
+		}
+	});
+
+	$(ELEM_NAME_SELECT_HOUR).bind('wheel', function(event) {
+		event.preventDefault();
+		//console.log('deltaY=' + event.originalEvent.deltaY);
+		if (event.originalEvent.deltaY < 0 && shouldActWheel()) {
+			prevHour();
+		} else if (event.originalEvent.deltaY > 0 && shouldActWheel()) {
+			nextHour();
+		}
+	});
+
+	$(ELEM_NAME_SELECT_DAY).bind('wheel', function(event) {
+		event.preventDefault();
+		if (event.originalEvent.deltaY < 0 && shouldActWheel() && prevDay()) {
+			resetGpvImage();
+			resetUrl();
+		} else if (event.originalEvent.deltaY > 0 && shouldActWheel() && nextDay()) {
+			resetGpvImage();
+			resetUrl();
+		}
+	});
+
+	$(ELEM_NAME_SELECT_MONTH).bind('wheel', function(event) {
+		event.preventDefault();
+		if (event.originalEvent.deltaY < 0 && shouldActWheel() && prevMonth()) {
+			resetGpvImage();
+			resetUrl();
+		} else if (event.originalEvent.deltaY > 0 && shouldActWheel() && nextMonth()) {
+			resetGpvImage();
+			resetUrl();
+		}
+	});
+
+	$(ELEM_NAME_SELECT_YEAR).bind('wheel', function(event) {
+		event.preventDefault();
+		if (event.originalEvent.deltaY < 0 && shouldActWheel() && prevYear()) {
+			resetGpvImage();
+			resetUrl();
+		} else if (event.originalEvent.deltaY > 0 && shouldActWheel() && nextYear()) {
+			resetGpvImage();
+			resetUrl();
+		}
+	});
+
+	//
+	// touch events
+	//
+	$(ELEM_NAME_TOUCH_AREA).bind('touchstart', function(event) {
+		event.preventDefault();
+		touch(event.originalEvent.changedTouches[0].clientX, event.originalEvent.changedTouches[0].clientY);
+	}).bind('touchmove', function(event) {
+		event.preventDefault();
+		move(event.originalEvent.changedTouches[0].clientX, event.originalEvent.changedTouches[0].clientY);
+	}).bind('touchend', function(event) {
+		event.preventDefault();
+		release(event.originalEvent.changedTouches[0].clientX, event.originalEvent.changedTouches[0].clientY);
+	}).bind('touchcancel', function(event) {
+		event.preventDefault();
+		release(event.originalEvent.changedTouches[0].clientX, event.originalEvent.changedTouches[0].clientY);
+	});
+
+	function touch(x, y) {
+		touchStartX = x;
+		touchStartY = y;
+		touchPrevX = x;
+		touchPrevY = y;
+		isTouching = true;
+		isTouchMoved = false;
+	}
+
+	function move(x, y) {
+		if (!isTouching) return;
+		const deltaX =  x - touchPrevX;
+		const deltaY =  y - touchPrevY;
+		//console.log('move: x=' + x + ', y=' + y + ', deltaX=' + deltaX + ', deltaY=' + deltaY);
+
+		if (Math.abs(deltaX) > TOUCH_MOVE_THRESHOLD) {
+			// move horizontal
+			if (autoPlayStatus !== AUTO_PLAY_STATUS.STOP) {
+				stopAutoPlay();
+			}
+			if (deltaX < 0) {
+				prevHour();
+			} else {
+				nextHour();
+			}
+			touchPrevX = x;
+			touchPrevY = y;
+			isTouchMoved = true;
+		} else if (Math.abs(deltaY) > TOUCH_MOVE_THRESHOLD) {
+			// move vertical
+			touchPrevX = x;
+			touchPrevY = y;
+			isTouchMoved = true;
+		}
+	}
+
+	function release(x, y) {
+		if (!isTouching) return;
+		cancel();
+	}
+
+	function cancel() {
+		touchStartX = null;
+		touchStartY = null;
+		touchPrevX = null;
+		touchPrevY = null;
+		isTouching = false;
+		isTouchMoved = false;
+	}
+
+	//
+	// key events
+	//
+	$(this).keydown(function(event) {
+		switch (event.keyCode) {
+			case KEY_CODE_LEFT:
+				if (autoPlayStatus !== AUTO_PLAY_STATUS.STOP) {
+					stopAutoPlay();
+				}
+				prevHour();
+				break;
+			case KEY_CODE_RIGHT:
+				if (autoPlayStatus !== AUTO_PLAY_STATUS.STOP) {
+					stopAutoPlay();
+				}
+				nextHour();
+				break;
+			default:
+				break;
+		}
+	});
+
+	//
+	// gui events
+	//
+	$(ELEM_NAME_INPUT_AREA).change(function() {
+		stopAutoPlay();
+		resetGpvImage();
+		//resetGpvFrame();
+		resetUrl();
+	});
+
+	$(ELEM_NAME_INPUT_TYPE).change(function() {
+		stopAutoPlay();
+		resetGpvImage();
+		//resetGpvFrame();
+		resetUrl();
+	});
+
+	$(ELEM_NAME_SELECT_YEAR).change(function() {
+		stopAutoPlay();
+		resetGpvImage();
+		resetUrl();
+	});
+
+	$(ELEM_NAME_SELECT_MONTH).change(function() {
+		stopAutoPlay();
+		const year = $(ELEM_NAME_SELECT_YEAR + ' > option:selected').val();
+		const month = $(ELEM_NAME_SELECT_MONTH + ' > option:selected').val()
+		initDayOptions(year, month);
+		resetGpvImage();
+		resetUrl();
+	});
+
+	$(ELEM_NAME_SELECT_DAY).change(function() {
+		stopAutoPlay();
+		resetGpvImage();
+		resetUrl();
+	});
+
+	$(ELEM_NAME_SELECT_HOUR).change(function() {
+		stopAutoPlay();
+		resetGpvImage();
+		resetUrl();
+	});
+
+	$(ELEM_NAME_PREV_BUTTON).click(function() {
+		if ($(ELEM_NAME_INPUT_AUTO_PLAY).prop('checked')) {
+			switch (autoPlayStatus) {
+				case AUTO_PLAY_STATUS.STOP:
+				case AUTO_PLAY_STATUS.PLAY:
+					startAutoPlay(AUTO_PLAY_STATUS.REVERSE);
+					break;
+				case AUTO_PLAY_STATUS.REVERSE:
+					stopAutoPlay();
+					break;
+				default:
+					console.assert(false, 'autoPlayStatus=' + autoPlayStatus);
+					break;
+			}
+		} else {
+			prevHour();
+		}
+	});
+
+	$(ELEM_NAME_NEXT_BUTTON).click(function() {
+		if ($(ELEM_NAME_INPUT_AUTO_PLAY).prop('checked')) {
+			switch (autoPlayStatus) {
+				case AUTO_PLAY_STATUS.STOP:
+				case AUTO_PLAY_STATUS.REVERSE:
+					startAutoPlay(AUTO_PLAY_STATUS.PLAY);
+					break;
+				case AUTO_PLAY_STATUS.PLAY:
+					stopAutoPlay();
+					break;
+				default:
+					console.assert(false, 'autoPlayStatus=' + autoPlayStatus);
+					break;
+			}
+		} else {
+			nextHour();
+		}
+	});
+
+	$(ELEM_NAME_RELOAD_BUTTON).click(function() {
+		const href = './' + getFileName() + '?'
+			+ QUERY_KEY_AREA + '=' + $(ELEM_NAME_INPUT_AREA + ':checked').val() + '&'
+			+ QUERY_KEY_TYPE + '=' + $(ELEM_NAME_INPUT_TYPE + ':checked').val();
+		window.location.href = href;
+	});
+
+	$(ELEM_NAME_INPUT_AUTO_PLAY).change(function() {
+		// $(ELEM_NAME_SELECT_SPEED).prop('disabled', !$(this).prop('checked'));
+		stopAutoPlay();
+	});
+
+	$(ELEM_NAME_SELECT_SPEED).change(function() {
+		//console.log($(ELEM_NAME_INPUT_AUTO_PLAY).prop('checked'));
+		if ($(ELEM_NAME_INPUT_AUTO_PLAY).prop('checked')) {
+			switch (autoPlayStatus) {
+				case AUTO_PLAY_STATUS.PLAY:
+				case AUTO_PLAY_STATUS.REVERSE:
+					startAutoPlay(null);
+				case AUTO_PLAY_STATUS.STOP:
+					break;
+				default:
+					console.assert(false, 'autoPlayStatus=' + autoPlayStatus);
+					break;
+			}
+		} else {
+			$(ELEM_NAME_INPUT_AUTO_PLAY).prop('checked', true);
+		}
+	});
 
 });
